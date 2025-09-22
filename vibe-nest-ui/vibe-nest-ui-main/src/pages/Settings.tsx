@@ -27,6 +27,7 @@ import { useTheme } from "@/contexts/ThemeContext";
 
 const settingSections = [
   { id: "account", title: "Account", icon: User, description: "Profile info, security, notifications" },
+  { id: "subscription", title: "Subscription", icon: Shield, description: "Manage your subscription plan" },
   { id: "privacy", title: "Privacy", icon: Eye, description: "Anonymous posting, journal privacy" },
   { id: "appearance", title: "Appearance", icon: Palette, description: "Dark mode, themes, customization" },
   { id: "language", title: "Language", icon: Globe, description: "Regional support and localization" },
@@ -45,11 +46,97 @@ export default function Settings() {
     reminderFrequency: "daily",
     voiceInteraction: false,
     language: "en",
+    subscription: "free", // free, premium, pro
+    hideAds: false,
   });
 
   const updateSetting = (key: string, value: any) => {
     setSettings(prev => ({ ...prev, [key]: value }));
   };
+
+  const renderSubscriptionSection = () => (
+    <div className="space-y-6">
+      <div>
+        <h3 className="text-lg font-semibold mb-4">Current Plan</h3>
+        <div className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Card className={`p-6 border-2 ${settings.subscription === 'free' ? 'border-primary' : 'border-border'}`}>
+              <div className="space-y-2">
+                <h4 className="font-bold text-lg">Free</h4>
+                <p className="text-muted-foreground">Basic features with ads</p>
+                <p className="font-bold text-xl mt-4">₹0/month</p>
+                <ul className="mt-4 space-y-2 text-sm">
+                  <li>• Ad-supported experience</li>
+                  <li>• Basic mental health resources</li>
+                  <li>• Community access</li>
+                </ul>
+                {settings.subscription === 'free' ? (
+                  <Button disabled className="w-full mt-4">Current Plan</Button>
+                ) : (
+                  <Button variant="outline" className="w-full mt-4">Downgrade</Button>
+                )}
+              </div>
+            </Card>
+            
+            <Card className={`p-6 border-2 ${settings.subscription === 'premium' ? 'border-primary' : 'border-border'}`}>
+              <div className="space-y-2">
+                <h4 className="font-bold text-lg">Premium</h4>
+                <p className="text-muted-foreground">Ad-free experience</p>
+                <p className="font-bold text-xl mt-4">₹299/month</p>
+                <ul className="mt-4 space-y-2 text-sm">
+                  <li>• Ad-free experience</li>
+                  <li>• Advanced mental health tools</li>
+                  <li>• Priority community support</li>
+                </ul>
+                {settings.subscription === 'premium' ? (
+                  <Button disabled className="w-full mt-4">Current Plan</Button>
+                ) : (
+                  <Button className="w-full mt-4">{settings.subscription === 'pro' ? 'Downgrade' : 'Upgrade'}</Button>
+                )}
+              </div>
+            </Card>
+            
+            <Card className={`p-6 border-2 ${settings.subscription === 'pro' ? 'border-primary' : 'border-border'}`}>
+              <div className="space-y-2">
+                <h4 className="font-bold text-lg">Pro</h4>
+                <p className="text-muted-foreground">Complete mental health suite</p>
+                <p className="font-bold text-xl mt-4">₹599/month</p>
+                <ul className="mt-4 space-y-2 text-sm">
+                  <li>• Everything in Premium</li>
+                  <li>• Unlimited AI therapy sessions</li>
+                  <li>• Discounted professional therapy</li>
+                </ul>
+                {settings.subscription === 'pro' ? (
+                  <Button disabled className="w-full mt-4">Current Plan</Button>
+                ) : (
+                  <Button className="w-full mt-4">Upgrade</Button>
+                )}
+              </div>
+            </Card>
+          </div>
+        </div>
+      </div>
+      
+      <Separator />
+      
+      <div>
+        <h3 className="text-lg font-semibold mb-4">Ad Preferences</h3>
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="font-medium">Hide Ads</p>
+              <p className="text-sm text-muted-foreground">Only available on Premium and Pro plans</p>
+            </div>
+            <Switch 
+              checked={settings.hideAds || settings.subscription !== 'free'}
+              disabled={settings.subscription === 'free'}
+              onCheckedChange={(checked) => updateSetting('hideAds', checked)}
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 
   const renderAccountSection = () => (
     <div className="space-y-6">
@@ -67,6 +154,38 @@ export default function Settings() {
           <div>
             <label className="text-sm font-medium text-foreground mb-2 block">Bio</label>
             <Input placeholder="Computer Science Student" defaultValue="Computer Science Student" />
+          </div>
+          
+          <div className="mt-4">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h4 className="font-medium">Sync with Gmail</h4>
+                <p className="text-sm text-muted-foreground">Import profile data from your Gmail account</p>
+              </div>
+              <Button variant="outline" className="flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M22 12.5V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v12c0 1.1.9 2 2 2h8.5"></path>
+                  <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+                  <path d="M16 19h6"></path>
+                  <path d="M19 16v6"></path>
+                </svg>
+                Connect Gmail
+              </Button>
+            </div>
+            <Card className="p-4 bg-muted/50">
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M22 12.5V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v12c0 1.1.9 2 2 2h8.5"></path>
+                    <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+                  </svg>
+                </div>
+                <div>
+                  <p className="font-medium">Gmail Sync</p>
+                  <p className="text-sm text-muted-foreground">Sync your profile picture, name, and contact details</p>
+                </div>
+              </div>
+            </Card>
           </div>
         </div>
       </div>
@@ -392,7 +511,7 @@ export default function Settings() {
 
   return (
     <div className="min-h-screen bg-background pb-20 md:pb-8">
-      <div className="container mx-auto px-4 py-6 max-w-4xl">
+      <div className="w-full mx-auto px-4 sm:px-6 md:px-8 lg:px-10 max-w-7xl py-6">
         {/* Header */}
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-foreground mb-2">Settings</h1>
