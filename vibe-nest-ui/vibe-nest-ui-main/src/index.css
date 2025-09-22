@@ -1,0 +1,307 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Vibenest Design System - Modern Mental Health Platform
+All colors MUST be HSL. Flat design, no gradients.
+*/
+
+@layer base {
+  :root {
+    /* Core Brand Colors - Calm & Supportive */
+    --background: 0 0% 99%;
+    --foreground: 215 25% 15%;
+
+    /* Card System */
+    --card: 0 0% 100%;
+    --card-foreground: 215 25% 15%;
+    --card-shadow: 215 10% 85%;
+
+    /* Interactive Elements */
+    --popover: 0 0% 100%;
+    --popover-foreground: 215 25% 15%;
+
+    /* Primary - Calming Teal */
+    --primary: 186 85% 45%;
+    --primary-foreground: 0 0% 100%;
+    --primary-hover: 186 85% 40%;
+    --primary-soft: 186 45% 95%;
+
+    /* Secondary - Soft Purple */
+    --secondary: 262 55% 65%;
+    --secondary-foreground: 0 0% 100%;
+    --secondary-hover: 262 55% 60%;
+    --secondary-soft: 262 35% 95%;
+
+    /* Neutral System */
+    --muted: 210 15% 96%;
+    --muted-foreground: 215 20% 55%;
+    --muted-dark: 215 15% 88%;
+
+    /* Accent - Wellness Green */
+    --accent: 142 65% 50%;
+    --accent-foreground: 0 0% 100%;
+    --accent-soft: 142 35% 95%;
+
+    /* Status Colors */
+    --success: 142 65% 50%;
+    --success-foreground: 0 0% 100%;
+    --warning: 45 95% 55%;
+    --warning-foreground: 0 0% 100%;
+    --destructive: 0 75% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Form Elements */
+    --border: 215 15% 88%;
+    --input: 215 15% 96%;
+    --input-border: 215 20% 80%;
+    --ring: 186 85% 45%;
+
+    /* Mood Colors */
+    --mood-happy: 55 95% 65%;
+    --mood-sad: 220 50% 55%;
+    --mood-angry: 0 75% 60%;
+    --mood-anxious: 45 85% 55%;
+    --mood-calm: 186 85% 45%;
+
+    /* Design System */
+    --radius: 16px;
+    --radius-sm: 8px;
+    --radius-lg: 24px;
+
+    /* Shadows */
+    --shadow-soft: 0 2px 8px -2px hsl(215 10% 85% / 0.3);
+    --shadow-card: 0 4px 12px -4px hsl(215 10% 80% / 0.4);
+    --shadow-elevated: 0 8px 25px -8px hsl(215 10% 75% / 0.5);
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 215 25% 8%;
+    --foreground: 210 20% 95%;
+
+    --card: 215 25% 10%;
+    --card-foreground: 210 20% 95%;
+    --card-shadow: 215 25% 5%;
+
+    --popover: 215 25% 10%;
+    --popover-foreground: 210 20% 95%;
+
+    --primary: 186 85% 50%;
+    --primary-foreground: 215 25% 8%;
+    --primary-hover: 186 85% 45%;
+    --primary-soft: 186 85% 15%;
+
+    --secondary: 262 55% 70%;
+    --secondary-foreground: 215 25% 8%;
+    --secondary-hover: 262 55% 65%;
+    --secondary-soft: 262 55% 15%;
+
+    --muted: 215 20% 15%;
+    --muted-foreground: 215 15% 65%;
+    --muted-dark: 215 20% 12%;
+
+    --accent: 142 65% 55%;
+    --accent-foreground: 215 25% 8%;
+    --accent-soft: 142 65% 15%;
+
+    --success: 142 65% 55%;
+    --success-foreground: 215 25% 8%;
+    --warning: 45 95% 60%;
+    --warning-foreground: 215 25% 8%;
+    --destructive: 0 75% 65%;
+    --destructive-foreground: 215 25% 8%;
+
+    --border: 215 20% 20%;
+    --input: 215 20% 15%;
+    --input-border: 215 20% 25%;
+    --ring: 186 85% 50%;
+
+    --mood-happy: 55 95% 70%;
+    --mood-sad: 220 50% 60%;
+    --mood-angry: 0 75% 65%;
+    --mood-anxious: 45 85% 60%;
+    --mood-calm: 186 85% 50%;
+
+    --shadow-soft: 0 2px 8px -2px hsl(215 25% 5% / 0.6);
+    --shadow-card: 0 4px 12px -4px hsl(215 25% 3% / 0.7);
+    --shadow-elevated: 0 8px 25px -8px hsl(215 25% 2% / 0.8);
+  }
+
+  /* Theme Variants */
+  .theme-blue {
+    --primary: 220 85% 55%;
+    --primary-hover: 220 85% 50%;
+    --primary-soft: 220 85% 95%;
+    --accent: 200 75% 55%;
+    --accent-soft: 200 75% 95%;
+  }
+
+  .theme-blue.dark {
+    --primary: 220 85% 60%;
+    --primary-soft: 220 85% 15%;
+    --accent: 200 75% 60%;
+    --accent-soft: 200 75% 15%;
+  }
+
+  .theme-purple {
+    --primary: 270 75% 60%;
+    --primary-hover: 270 75% 55%;
+    --primary-soft: 270 75% 95%;
+    --accent: 290 65% 55%;
+    --accent-soft: 290 65% 95%;
+  }
+
+  .theme-purple.dark {
+    --primary: 270 75% 65%;
+    --primary-soft: 270 75% 15%;
+    --accent: 290 65% 60%;
+    --accent-soft: 290 65% 15%;
+  }
+
+  .theme-neutral {
+    --primary: 215 25% 45%;
+    --primary-hover: 215 25% 40%;
+    --primary-soft: 215 25% 95%;
+    --accent: 215 15% 55%;
+    --accent-soft: 215 15% 95%;
+  }
+
+  .theme-neutral.dark {
+    --primary: 215 25% 70%;
+    --primary-soft: 215 25% 15%;
+    --accent: 215 15% 65%;
+    --accent-soft: 215 15% 15%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Inter', sans-serif;
+  }
+}
+
+@layer components {
+  /* Card Component Variants */
+  .card-elevated {
+    @apply bg-card shadow-[--shadow-card] border-0;
+  }
+  
+  .card-soft {
+    @apply bg-card shadow-[--shadow-soft] border border-border;
+  }
+
+  /* Button Variants */
+  .btn-vibenest {
+    @apply bg-primary text-primary-foreground hover:bg-[hsl(var(--primary-hover))] 
+           rounded-[--radius] px-6 py-3 font-medium transition-colors;
+  }
+  
+  .btn-secondary {
+    @apply bg-secondary text-secondary-foreground hover:bg-[hsl(var(--secondary-hover))]
+           rounded-[--radius] px-6 py-3 font-medium transition-colors;
+  }
+
+  .btn-ghost {
+    @apply hover:bg-muted text-muted-foreground hover:text-foreground
+           rounded-[--radius] px-4 py-2 font-medium transition-colors;
+  }
+
+  /* Input Variants */
+  .input-vibenest {
+    @apply bg-input border border-[hsl(var(--input-border))] text-foreground
+           rounded-[--radius-sm] px-4 py-3 focus:ring-2 focus:ring-ring focus:border-transparent
+           placeholder:text-muted-foreground transition-all;
+  }
+
+  /* Text Styles */
+  .text-heading {
+    @apply text-2xl font-semibold text-foreground;
+  }
+  
+  .text-subheading {
+    @apply text-lg font-medium text-foreground;
+  }
+  
+  .text-body {
+    @apply text-base text-foreground;
+  }
+  
+  .text-caption {
+    @apply text-sm text-muted-foreground;
+  }
+
+  /* Mood Tracking */
+  .mood-happy {
+    @apply bg-[hsl(var(--mood-happy))] text-white;
+  }
+  
+  .mood-sad {
+    @apply bg-[hsl(var(--mood-sad))] text-white;
+  }
+  
+  .mood-calm {
+    @apply bg-[hsl(var(--mood-calm))] text-white;
+  }
+  
+  .mood-anxious {
+    @apply bg-[hsl(var(--mood-anxious))] text-white;
+  }
+  
+  .mood-angry {
+    @apply bg-[hsl(var(--mood-angry))] text-white;
+  }
+
+  /* Animations */
+  .animate-fade-in {
+    animation: fadeIn 0.3s ease-out;
+  }
+  
+  .animate-slide-up {
+    animation: slideUp 0.4s ease-out;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
