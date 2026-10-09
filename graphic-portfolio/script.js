@@ -458,6 +458,40 @@ document.querySelectorAll("#workDrop .work-drop-item").forEach(b=>b.addEventList
   });
 })();
 
+// works tape — gapless ticker: rebuild two identical halves so EACH covers the
+// tape width (measured with live font metrics), keeping the -50% loop seamless
+// at any viewport; speed held constant (~80px/s) via width-scaled duration
+(function(){
+  const track = $("tapeTrack"); if(!track || !track.parentElement) return;
+  const UNIT = "SEE MORE.\u00A0";
+  function unitW(){
+    const s = document.createElement("span");
+    s.style.cssText = "position:absolute;visibility:hidden;white-space:nowrap;";
+    s.textContent = UNIT;
+    track.appendChild(s);
+    const w = s.offsetWidth || 90;
+    s.remove();
+    return w;
+  }
+  function build(){
+    const tapeW = track.parentElement.clientWidth || innerWidth;
+    const reps = Math.max(6, Math.ceil(tapeW / unitW()) + 1);
+    track.textContent = "";
+    for(let h = 0; h < 2; h++){
+      const half = document.createElement("span");
+      half.textContent = UNIT.repeat(reps);
+      if(h) half.setAttribute("aria-hidden", "true");
+      track.appendChild(half);
+    }
+    // constant scroll speed on every screen: duration follows half-width
+    track.style.animationDuration = Math.max(8, (track.scrollWidth / 2) / 80).toFixed(1) + "s";
+  }
+  build();
+  if(document.fonts && document.fonts.ready) document.fonts.ready.then(build);
+  let t = 0;
+  addEventListener("resize", ()=>{ clearTimeout(t); t = setTimeout(build, 200); });
+})();
+
 // works index — editorial rows with numbers (signature: hover shifts art, cursor names the project)
 const grid = $("worksGrid");
 if(grid) grid.innerHTML = POSTERS.map((p,i)=>`
