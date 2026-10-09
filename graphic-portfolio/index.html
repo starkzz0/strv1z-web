@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<!--
+  STRV1Z — homepage (graphic-portfolio/index.html)
+  STRUCTURE: loader → header nav → hero canvas → work showcase → about → faq → contact → footer → toast
+  QUICK EDITS:
+    - Nav links ............ <header class="lereve-nav">
+    - About bio ............ section#about
+    - FAQ entries .......... script.js → FAQS array
+    - Contact email ........ search "hello@example.com" (pills + forms)
+    - Hero posters ......... script.js → collage SHOTS array
+  STYLE: styles.css (tokens at :root). BEHAVIOR: script.js.
+-->
+<html lang="en" class="dark">
+<head>
+<script>try{document.documentElement.classList.add("js");var d=sessionStorage.getItem("strv1z_dir");if(d){document.documentElement.classList.add(d==="back"?"enter-back":"enter-fwd");sessionStorage.removeItem("strv1z_dir")}else if(sessionStorage.getItem("strv1z_seen"))document.documentElement.classList.add("seen")}catch(e){}</script>
+<style>html{background:#0C0C0B}</style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="theme-color" content="#0C0C0B" />
+<title>strv1z — Visual Designer</title>
+<meta name="description" content="Posters, branding, typography and visual identities." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.gstatic.com/s/geist/v5/gyByhwUxId8gMEwcGFU.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.gstatic.com/s/spacemono/v17/iPmncF6NQADrRSbtXWY0Vr8Sbls.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.gstatic.com/s/spacemono/v17/iPmncF6NQADrRSbtXVY0Vr8SblsA2bmjjZE.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.gstatic.com/s/instrumentserif/v5/jizHRFtNs2ka5fXjeivQ4LroWlx-6zAjjH7M.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.gstatic.com/s/intertight/v9/NGSwv5HMAFg6IuGlBNMjxLsH8ag.woff2">
+<link rel="preconnect" href="https://fonts.cdnfonts.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600;800;900&family=Inter+Tight:wght@700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.cdnfonts.com/css/neue-montreal" rel="stylesheet" media="print" onload="this.media='all'">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20width='64'%20height='64'%20rx='14'%20fill='%230C0C0B'/%3E%3Ctext%20x='32'%20y='45'%20font-family='Georgia,serif'%20font-style='italic'%20font-size='36'%20text-anchor='middle'%20fill='%23E9E6DE'%3ES%3C/text%3E%3C/svg%3E" />
+<link rel="stylesheet" href="styles.css?v=76" />
+</head>
+<body>
+<div class="loader" id="loader" aria-hidden="true">
+  <span class="loader-mark">Strv1z</span>
+  <span class="loader-count mono" id="loaderCount">00</span>
+  <span class="loader-bar"><span id="loaderBar"></span></span>
+</div>
+<script src="https://unpkg.com/lenis@1.3.26/dist/lenis.min.js"></script>
+
+<!-- ===== header nav (same on all pages; .active marks current page) ===== -->
+<header class="lereve-nav" id="siteHeader">
+  <a class="lereve-brand" href="index.html" id="lereveBrand">Strv1z</a>
+  <nav class="lereve-links">
+    <a href="#top" class="active" aria-current="page">Home</a>
+    <div class="work-nav">
+      <a href="works.html">Works</a>
+      <div class="work-drop" id="workDrop">
+        <button type="button" class="work-drop-item" data-format="posters">
+          <span class="work-thumb"><i></i><i></i></span>
+          <span class="work-drop-label">Posters <span class="arrow">→</span></span>
+        </button>
+        <button type="button" class="work-drop-item" data-format="banners">
+          <span class="work-thumb"><i></i><i></i></span>
+          <span class="work-drop-label">Banners <span class="arrow">→</span></span>
+        </button>
+        <button type="button" class="work-drop-item" data-format="layouts">
+          <span class="work-thumb"><i></i><i></i></span>
+          <span class="work-drop-label">Layouts <span class="arrow">→</span></span>
+        </button>
+      </div>
+    </div>
+    <a href="terms.html">Terms</a>
+    <button id="cartBtn" type="button" class="lereve-cart" style="display:none">Cart (<span id="cartCount">0</span>)</button>
+  </nav>
+</header>
+
+<!-- ===== hero: particle typography canvas (#heroParticles) + magnet field (#magnetGrid) ===== -->
+<section class="gallery-hero" id="top">
+  <h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">STRV1Z — visual designer</h1>
+  <div class="magnet-grid" id="magnetGrid" aria-hidden="true"></div>
+  <div class="gallery-mark" aria-hidden="true"><canvas id="heroParticles"></canvas></div>
+  <p class="hero-tagline">From digital layouts to printed posters, I make visuals with a pulse.<br>Giving every frame a voice, and every composition a purpose.</p>
+</section>
+
+<!-- ===== work showcase: tilted grid (#tiltedGrid) + sign-off + tape to works.html ===== -->
+<section class="feat" id="works">
+  <div class="feat-head"><span class="kicker" style="margin-bottom:12px">01 / Work</span><h2 class="sec-title">Work</h2></div>
+  <div class="tilted" id="tiltedGrid" aria-label="Selected work — scroll to tilt"></div>
+  <div class="feat-sign"><span class="feat-sign-name" id="featSignName">strv1z</span><span class="feat-sign-line"></span><span class="feat-sign-sub mono">poster archive — 2023 / 26</span></div>
+  <a class="feat-tape mono" href="works.html" aria-label="See all works"><span class="feat-tape-track"><span>SEE MORE. &nbsp; SEE MORE. &nbsp; SEE MORE. &nbsp; SEE MORE. &nbsp; SEE MORE. &nbsp; SEE MORE. &nbsp;</span><span>SEE MORE. &nbsp; SEE MORE. &nbsp; SEE MORE. &nbsp; SEE MORE. &nbsp; SEE MORE. &nbsp; SEE MORE. &nbsp;</span></span></a>
+</section>
+
+<div class="sheet">
+  <div class="sys"><span>03 // ABOUT</span></div>
+  <section class="sec" id="about">
+    <span class="kicker">About</span>
+    <div class="about-wrap">
+      <div class="about-card"><h2>About me</h2></div>
+      <div class="about-card"><p>I'm <b id="aboutName">strv1z</b> — STRV1Z, an independent graphic designer specializing in posters, typography, visual identities, and experimental graphics. I work with brands, artists, events, and individuals to develop visual work from concept to final execution.</p><p class="muted">Currently booking posters &amp; small brand kits. Two slots at a time, async, email-first.</p><p><a class="btn-ghost mono" href="#contact">Contact ↗</a></p></div>
+    </div>
+  </section>
+
+  <div class="sys"><span>04 // FAQ</span></div>
+  <section class="sec" id="faq">
+    <span class="kicker">Questions</span>
+    <div class="faq-list" id="faqList"></div>
+  </section>
+
+<!-- ===== contact CTA: headline + pills (form hidden until "start a project") ===== -->
+  <section class="sec" id="contact">
+    <span class="kicker">05 / Contact</span>
+    <h2 class="cta-title">let's work<br>together</h2>
+    <div class="cta-pills">
+      <a class="cta-pill" href="#contact" id="startProjectBtn">start a project</a>
+      <a class="cta-pill" href="https://mail.google.com/mail/?view=cm&to=hello@example.com" target="_blank" rel="noopener">email</a>
+    </div>
+    <div id="contactForm" hidden>
+    <div class="contact-title"><span class="kicker" style="margin:0">Index // Contact</span><h2>Contact</h2></div>
+    <div class="formbox">
+      <form id="helloForm">
+        <label>Name</label><input required name="name" placeholder="Your Name" />
+        <label>Email Address</label><input required type="email" name="email" placeholder="your@email.com" />
+        <label>Project Details</label><textarea required name="msg" rows="5" placeholder="Tell us about your project, timeline..."></textarea>
+        <button class="btn-white mono" type="submit">Send Message →</button>
+      </form>
+      <p class="mono muted" style="font-size:11px;margin-top:12px">For costs, go to <a href="shop.html" style="color:var(--accent)">shop →</a> (ready posters + custom).</p>
+    </div>
+    </div>
+  </section>
+
+  <footer>
+    <div><strong>STRV1Z</strong><p>© 2026 // <a href="terms.html" style="color:var(--accent)">TERMS</a></p></div>
+    <div style="display:flex;gap:24px"><a href="#">INSTAGRAM ↗</a><a href="#">BEHANCE ↗</a><a href="terms.html">TERMS ↗</a></div>
+  </footer>
+</div>
+
+<div class="toast mono" id="toast">Added to cart ✓</div>
+<div class="cursor-label" id="cursorLabel" aria-hidden="true"></div>
+
+<script src="script.js?v=38"></script>
+</body>
+</html>

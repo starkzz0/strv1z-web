@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<!--
+  STRV1Z — shop (graphic-portfolio/shop.html)
+  STRUCTURE: header → page head → posters grid (#shopGrid) → custom packages → shopify connect → order form → footer → info modal + cart
+  QUICK EDITS:
+    - Products ............. script.js → PRODUCTS array (copy template line)
+    - Package prices ........ .price-card blocks below
+    - Contact email ........ search "hello@example.com"
+-->
+<html lang="en" class="dark">
+<head>
+<script>try{document.documentElement.classList.add("js");var d=sessionStorage.getItem("strv1z_dir");if(d){document.documentElement.classList.add(d==="back"?"enter-back":"enter-fwd");sessionStorage.removeItem("strv1z_dir")}else if(sessionStorage.getItem("strv1z_seen"))document.documentElement.classList.add("seen")}catch(e){}</script>
+<style>html{background:#0C0C0B}</style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="theme-color" content="#0C0C0B" />
+<title>Shop — Posters — STRV1Z</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.gstatic.com/s/geist/v5/gyByhwUxId8gMEwcGFU.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.gstatic.com/s/spacemono/v17/iPmncF6NQADrRSbtXWY0Vr8Sbls.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.gstatic.com/s/spacemono/v17/iPmncF6NQADrRSbtXVY0Vr8SblsA2bmjjZE.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.gstatic.com/s/instrumentserif/v5/jizHRFtNs2ka5fXjeivQ4LroWlx-6zAjjH7M.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.gstatic.com/s/intertight/v9/NGSwv5HMAFg6IuGlBNMjxLsH8ag.woff2">
+<link rel="preconnect" href="https://fonts.cdnfonts.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600;800;900&family=Inter+Tight:wght@700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.cdnfonts.com/css/neue-montreal" rel="stylesheet" media="print" onload="this.media='all'">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20width='64'%20height='64'%20rx='14'%20fill='%230C0C0B'/%3E%3Ctext%20x='32'%20y='45'%20font-family='Georgia,serif'%20font-style='italic'%20font-size='36'%20text-anchor='middle'%20fill='%23E9E6DE'%3ES%3C/text%3E%3C/svg%3E" />
+<link rel="stylesheet" href="styles.css?v=76" />
+</head>
+<body>
+<script src="https://unpkg.com/lenis@1.3.26/dist/lenis.min.js"></script>
+<header class="lereve-nav" id="siteHeader">
+  <a class="lereve-brand" href="index.html" id="lereveBrand">STRV1Z</a>
+  <nav class="lereve-links">
+    <a href="index.html#top">HOME</a>
+    <div class="work-nav">
+      <a href="works.html">WORKS</a>
+      <div class="work-drop" id="workDrop">
+        <button type="button" class="work-drop-item" data-format="posters">
+          <span class="work-thumb"><i></i><i></i></span>
+          <span class="work-drop-label">Posters <span class="arrow">→</span></span>
+        </button>
+        <button type="button" class="work-drop-item" data-format="banners">
+          <span class="work-thumb"><i></i><i></i></span>
+          <span class="work-drop-label">Banners <span class="arrow">→</span></span>
+        </button>
+        <button type="button" class="work-drop-item" data-format="layouts">
+          <span class="work-thumb"><i></i><i></i></span>
+          <span class="work-drop-label">Layouts <span class="arrow">→</span></span>
+        </button>
+      </div>
+    </div>
+    <a href="terms.html">TERMS</a>
+    <button id="cartBtn" type="button" class="lereve-cart" style="display:none">CART (<span id="cartCount">0</span>)</button>
+  </nav>
+</header>
+
+<section class="hero" style="min-height:52dvh">
+  <span class="page-kicker">02 / Shop</span>
+  <h1 class="page-title">Shop</h1>
+  <p class="page-lede">Original runs and small editions. Open one for details, add to cart, check out — custom work starts below.</p>
+  <div class="hero-sub mono"><div class="left muted">FIXED PRICES · SHIPS WORLDWIDE</div><div class="center"></div><div class="right muted"><a href="index.html" style="color:var(--accent)">← BACK TO INDEX</a></div></div>
+</section>
+
+<div class="sheet">
+  <div class="sys"><span>SYS // SHOP</span></div>
+  <!-- ===== posters buy section: search + filters + grid (rendered by script.js) ===== -->
+  <section class="sec" id="shop">
+    <span class="kicker">Posters</span>
+    <div class="shop-toolbar">
+      <input id="shopSearch" class="shop-search" placeholder="Search posters…  (e.g. grunge, type)" />
+      <div class="shop-filters" id="shopFilters">
+        <button class="chip active" data-cat="all">All</button>
+        <button class="chip" data-cat="grunge">Grunge</button>
+        <button class="chip" data-cat="type">Type</button>
+        <button class="chip" data-cat="brand">Brand</button>
+        <button class="chip" data-cat="gig">Gig</button>
+      </div>
+      <select id="shopSort" class="shop-search" style="max-width:190px">
+        <option value="feat">Sort: Featured</option>
+        <option value="low">Price: Low → High</option>
+        <option value="high">Price: High → Low</option>
+        <option value="rating">Top rated</option>
+      </select>
+    </div>
+    <div class="shop-grid" id="shopGrid"></div>
+    <p class="soft-note">Need something custom? <a href="#order">order a custom poster →</a></p>
+  </section>
+
+  <div class="sys"><span>SYS // CUSTOM</span></div>
+  <section class="sec" id="custom">
+    <span class="kicker">Custom</span>
+    <div class="price-grid">
+      <div class="price-card"><p class="mono muted" style="font-size:11px">POSTER / SINGLE</p><h3>$45+</h3><ul><li>1 custom poster</li><li>A4 + A3 + social files</li><li>2 revisions</li><li>3–5 days</li></ul><button class="btn-white mono" data-order="Poster - Starter $45">Order Starter</button></div>
+      <div class="price-card hot"><p class="mono" style="font-size:11px;color:#f87171">★ MOST POPULAR</p><h3>$95+</h3><p><b>Grunge / Illustrated</b></p><ul><li>Textured style</li><li>A2 print-ready + digital</li><li>3 revisions + source</li><li>Commercial license</li></ul><button class="btn-white mono" data-order="Poster - Pro Grunge $95">Order Pro</button></div>
+      <div class="price-card"><p class="mono muted" style="font-size:11px">LOGO + BRAND</p><h3>$220+</h3><ul><li>Logo + colors + fonts</li><li>Poster / social templates</li><li>1-pager guideline</li><li>1–2 weeks</li></ul><button class="btn-white mono" data-order="Brand Kit $220">Order Brand Kit</button></div>
+    </div>
+  </section>
+
+  <div class="sys"><span>SYS // SHOPIFY</span></div>
+  <section class="sec" id="shopify">
+    <span class="kicker">Shopify connect</span>
+    <div class="formbox">
+      <p class="mono muted" id="shopifyStatus" style="font-size:11px">○ DEMO MODE — local cart only</p>
+      <label>Store domain</label><input id="shopifyDomain" placeholder="your-store.myshopify.com" />
+      <label>Storefront API token (optional, for live sync)</label><input id="shopifyToken" placeholder="shpat_…" />
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn-white mono" id="shopifySave" type="button" style="flex:1">Connect Shopify →</button>
+        <button class="btn-ghost mono" id="shopifyTest" type="button">Test API</button>
+      </div>
+      <p class="mono muted" style="font-size:11px;margin-top:12px">1. In Shopify: Apps → Headless → allow Storefront API.<br/>2. Products → set handle = slug above (e.g. <b>persona-gold</b>).<br/>3. Copy variant ID (numbers) into <b>PRODUCTS[].shopifyVariantId</b> in script.js for 1-click cart checkout.<br/>Without IDs, buttons fall back to product / cart pages.</p>
+    </div>
+  </section>
+
+  <div class="sys"><span>SYS // ORDER</span></div>
+  <section class="sec" id="order">
+    <div class="contact-title"><span class="kicker" style="margin:0">Index // Order</span><h2>Order</h2></div>
+    <div class="formbox">
+      <form id="orderForm">
+        <label>Name</label><input required name="name" placeholder="Jane Doe"/>
+        <label>Email</label><input required type="email" name="email" placeholder="you@email.com"/>
+        <label>Package / Cart</label><select name="package" id="orderPackage"><option>Poster - Starter $45</option><option selected>Poster - Pro Grunge $95</option><option>Brand Kit $220</option><option>Logo $80</option><option>Cart checkout</option></select>
+        <label>Details</label><textarea name="brief" rows="4" placeholder="Text, size, style..."></textarea>
+        <button class="btn-white mono" type="submit">Send Order →</button>
+      </form>
+      <div class="mono muted" id="orderSummary" style="font-size:11px;margin-top:12px;white-space:pre-wrap"></div>
+      <p class="mono muted" style="font-size:11px"><a href="index.html" style="color:#fff">← just browsing? back to works</a></p>
+    </div>
+  </section>
+
+  <footer><div><strong>STRV1Z</strong><p>© 2026 // <a href="terms.html" style="color:#fff">TERMS</a> — POSTERS READY TO BUY</p></div><div><a href="index.html">WORKS ↗</a><a href="terms.html">TERMS ↗</a></div></footer>
+</div>
+
+<!-- ===== info popup: filled per-product by script.js (openInfo) ===== -->
+<div class="modal-backdrop" id="infoModal" aria-hidden="true">
+  <div class="modal" role="dialog" aria-modal="true">
+    <button class="modal-x" id="infoClose" aria-label="Close">✕</button>
+    <div class="modal-media" id="infoMedia">NOISE</div>
+    <div class="modal-body">
+      <p class="mono muted" id="infoCat" style="font-size:11px;letter-spacing:.15em">GRUNGE / 2025</p>
+      <h3 id="infoTitle">Noise Zine</h3>
+      <div class="stars" id="infoStars">★★★★★ <span class="mono muted">4.9 (128)</span></div>
+      <p class="modal-price"><span id="infoPrice">$45</span> <s id="infoOld" class="muted"></s> <span class="chip" id="infoBadge">BESTSELLER</span></p>
+      <p id="infoDesc" class="muted" style="line-height:1.7;font-size:.9rem"></p>
+      <ul class="specs" id="infoSpecs"></ul>
+      <div class="modal-row">
+        <label class="mono muted" style="font-size:11px">QTY <input type="number" id="infoQty" value="1" min="1" max="10" style="width:64px;background:#18181b;border:1px solid var(--border);border-radius:8px;color:#fff;padding:8px" /></label>
+        <label class="mono muted" style="font-size:11px">SIZE
+          <select id="infoSize" style="background:#18181b;border:1px solid var(--border);border-radius:8px;color:#fff;padding:8px">
+            <option value="0">A3 (+$0)</option>
+            <option value="15">A2 (+$15)</option>
+            <option value="25">A2 + framed (+$45)</option>
+          </select>
+        </label>
+      </div>
+      <div class="modal-row">
+        <button class="btn-white mono" id="infoAdd" style="margin-top:0">Add to cart →</button>
+        <button class="btn-ghost mono" id="infoBuy">Buy now</button>
+      </div>
+      <button class="btn-ghost mono" id="shopifyBuyBtn" style="width:100%;justify-content:center;border-color:#95bf47">Buy on Shopify ↗</button>
+      <p class="mono muted" style="font-size:11px">✓ In stock • Ships in 3–5 days • 30-day returns <span data-shopify-only>• Shopify sync on</span></p>
+    </div>
+  </div>
+</div>
+
+<!-- ===== cart drawer removed while shop is disabled (SHOP_ENABLED=false) ===== -->
+<div class="toast mono" id="toast">Added to cart ✓</div>
+
+<script src="script.js?v=38"></script>
+</body>
+</html>

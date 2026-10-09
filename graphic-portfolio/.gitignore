@@ -1,0 +1,7 @@
+# local restore points — never publish
+*.backup
+*.valenized-backup
+# editor / OS noise
+.DS_Store
+Thumbs.db
+*.code-workspace
