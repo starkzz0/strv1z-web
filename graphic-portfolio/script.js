@@ -490,6 +490,30 @@ document.querySelectorAll("#workDrop .work-drop-item").forEach(b=>b.addEventList
   if(document.fonts && document.fonts.ready) document.fonts.ready.then(build);
   let t = 0;
   addEventListener("resize", ()=>{ clearTimeout(t); t = setTimeout(build, 200); });
+  // smooth hover pause — CSS play-state freezes mid-frame (erratic); eased
+  // velocity glides to a halt on hover and back on leave (CSS anim = fallback)
+  const tape = track.parentElement;
+  if(!matchMedia("(prefers-reduced-motion: reduce)").matches){
+    track.style.animation = "none";
+    const PX_PER_SEC = 80;
+    let x = 0, cur = 1, goal = 1, last = 0;
+    tape.addEventListener("pointerenter", ()=>{ goal = 0; });
+    tape.addEventListener("pointerleave", ()=>{ goal = 1; });
+    requestAnimationFrame(function tick(now){
+      if(last){
+        const dt = Math.min(0.05, (now - last) / 1000);
+        cur += (goal - cur) * (1 - Math.pow(0.001, dt)); // frame-rate independent glide
+        if(Math.abs(cur) > 0.0005){
+          x -= cur * PX_PER_SEC * dt;
+          const h = track.scrollWidth / 2 || 1;
+          x = ((x % h) + h) % h; // wrap across the identical halves
+          track.style.transform = "translate3d(" + (-x).toFixed(1) + "px,0,0)";
+        }
+      }
+      last = now;
+      requestAnimationFrame(tick);
+    });
+  }
 })();
 
 // works index — editorial rows with numbers (signature: hover shifts art, cursor names the project)
