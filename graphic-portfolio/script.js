@@ -890,7 +890,8 @@ if($("orderForm")) $("orderForm").addEventListener("submit",e=>{
 
 // hero particle typography — STRV1Z sampled into canvas dots that flee the
 // cursor and spring home (vanilla port of cursor-driven-particle-typography).
-// TUNE: GAP (dot density), RADIUS/FORCE (cursor push), SPRING (return speed).
+// TUNE: GAP (dot density), RADIUS/FORCE (cursor push), SPRING (return speed),
+// VMAX (top speed — keeps flicks silky, never teleporting).
 (function(){
   const canvas = $("heroParticles"); if(!canvas) return;
   const hero = canvas.closest(".gallery-hero") || document.body;
@@ -900,9 +901,9 @@ if($("orderForm")) $("orderForm").addEventListener("submit",e=>{
   // phones: sparser dots, shorter push, lower particle ceiling — but dense
   // enough to read (GAP 6 ≈ 300 dots for the hero word, not ~130)
   const small = matchMedia("(max-width: 700px)").matches;
-  const GAP = small ? 6 : 5, RADIUS = small ? 70 : 90, FORCE = small ? 10 : 14, SPRING = 0.07, FRICTION = 0.86, SIZE = small ? 1.3 : 1.6, MAX = small ? 2200 : 6000;
+  const GAP = small ? 6 : 5, RADIUS = small ? 70 : 90, FORCE = small ? 10 : 14, SPRING = 0.055, FRICTION = 0.90, VMAX = small ? 6 : 8, SIZE = small ? 1.3 : 1.6, MAX = small ? 2200 : 6000;
   let W = 0, H = 0, parts = [], raf = 0, cLeft = 0, cTop = 0;
-  const mouse = { x:-9999, y:-9999 };
+  const mouse = { x:-9999, y:-9999 }, sm = { x:-9999, y:-9999 }; // sm = glided cursor
   function build(){
     const r = hero.getBoundingClientRect();
     cLeft = r.left + scrollX; cTop = r.top + scrollY;   // page coords: scroll-proof, no per-frame layout
@@ -931,10 +932,13 @@ if($("orderForm")) $("orderForm").addEventListener("submit",e=>{
     const count = g => { let n = 0; for(let y = 0; y < off.height; y += g) for(let x = 0; x < off.width; x += g){ if(data[(y * off.width + x) * 4 + 3] > 128) n++; } return n; };
     while(count(gap) > MAX && gap < 12) gap++;
     const ox = (W - tw) / 2 - 4, oy = (H - off.height) / 2 - (portrait ? H * 0.05 : 0);
+    // intro bloom: dots start scattered and settle home (every build, so font
+    // swaps and resizes re-bloom instead of snapping); fa/fp/fs = idle breath
+    const SCAT = Math.min(140, px * 0.6);
     parts = [];
     for(let y = 0; y < off.height; y += gap) for(let x = 0; x < off.width; x += gap){
       if(data[(y * off.width + x) * 4 + 3] > 128)
-        parts.push({ ox: ox + x, oy: oy + y, x: ox + x, y: oy + y, vx: 0, vy: 0, s: SIZE * (0.7 + Math.random() * 0.6) });
+        parts.push({ ox: ox + x, oy: oy + y, x: ox + x + (Math.random() - 0.5) * 2 * SCAT, y: oy + y + (Math.random() - 0.5) * 2 * SCAT, vx: 0, vy: 0, s: SIZE * (0.7 + Math.random() * 0.6), fa: 0.8 + Math.random() * 1.4, fp: Math.random() * 6.283, fs: 0.6 + Math.random() * 0.8 });
     }
   }
   function paint(){
@@ -942,20 +946,28 @@ if($("orderForm")) $("orderForm").addEventListener("submit",e=>{
     ctx.fillStyle = INK;
     for(const p of parts) ctx.fillRect(p.x, p.y, p.s, p.s);
   }
-  function frame(){
+  function frame(now){
     ctx.clearRect(0, 0, W, H);
     ctx.fillStyle = INK;
-    const mx = mouse.x + scrollX - cLeft, my = mouse.y + scrollY - cTop;
+    // glide the force field — cursor jumps never teleport the dots
+    if(sm.x < -9000){ sm.x = mouse.x; sm.y = mouse.y; }
+    else { sm.x += (mouse.x - sm.x) * 0.2; sm.y += (mouse.y - sm.y) * 0.2; }
+    const mx = sm.x + scrollX - cLeft, my = sm.y + scrollY - cTop;
+    const t = (now || performance.now()) * 0.001;
     for(const p of parts){
       const dx = p.x - mx, dy = p.y - my, d = Math.sqrt(dx * dx + dy * dy);
       if(d < RADIUS && d > 0.01){
-        const f = (1 - d / RADIUS) * FORCE;
+        // cosine falloff — push fades to zero at the edge, no visible boundary
+        const f = (Math.cos(d / RADIUS * Math.PI) + 1) * 0.5 * FORCE;
         p.vx += (dx / d) * f; p.vy += (dy / d) * f;
       }
+      const sp2 = p.vx * p.vx + p.vy * p.vy;   // clamp flings, keep top speed silky
+      if(sp2 > VMAX * VMAX){ const k = VMAX / Math.sqrt(sp2); p.vx *= k; p.vy *= k; }
       p.vx += (p.ox - p.x) * SPRING; p.vy += (p.oy - p.y) * SPRING;
       p.vx *= FRICTION; p.vy *= FRICTION;
       p.x += p.vx; p.y += p.vy;
-      ctx.fillRect(p.x, p.y, p.s, p.s);
+      // idle breathing — render-only offset, never fights the spring
+      ctx.fillRect(p.x + Math.sin(t * p.fs + p.fp) * p.fa, p.y + Math.cos(t * p.fs * 0.9 + p.fp) * p.fa, p.s, p.s);
     }
     raf = requestAnimationFrame(frame);
   }
