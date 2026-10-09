@@ -106,7 +106,7 @@ html.scroll-locked{overflow:hidden}
 /* single monumental headline + attached sub row (no more split columns) */
 .kai-hero{display:flex;flex-direction:column;justify-content:flex-end;width:100%}
 .kai-headline{margin:0;font-family:Oswald,"Arial Narrow",sans-serif;font-weight:700;font-size:clamp(72px,32vw,560px);line-height:.86;letter-spacing:0;text-transform:uppercase;white-space:nowrap}
-.kai-sub{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;width:100%;margin-top:clamp(10px,2vh,20px)}
+.kai-sub{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;width:100%;margin-top:clamp(16px,3vh,30px)}
 .kai-block{min-width:0}
 .kai-block.right{text-align:right}
 
