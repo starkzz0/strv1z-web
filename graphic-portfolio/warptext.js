@@ -284,7 +284,8 @@ function initWarpText(container, props) {
 
   let canvas;
   function onPointerMove(event) {
-    if (event.pointerType === 'touch') return;
+    // touch included: finger drags bend the text too (listener is passive,
+    // so page scroll keeps working while the lens follows the finger)
     const rect = canvas.getBoundingClientRect();
     if (rect.width <= 0 || rect.height <= 0) return;
     pointer.tx = (event.clientX - rect.left) / rect.width;
@@ -488,11 +489,11 @@ if (heroWarp) initWarpText(heroWarp, {
   letterSpacing: '-0.02em',
   lineHeight: 0.95,
   fontSize: 'clamp(6rem, 22vw, 20rem)', // monumental: ~975px wordmark desktop, edge-to-edge mobile via auto-fit
-  warpStrength: 0.06,
-  warpScale: 1.7,
-  speed: 0.45,
-  pointerInfluence: 0.42,
-  pointerStrength: 0.35,
-  refraction: 0.015,
+  warpStrength: 0.22,
+  warpScale: 1.5,
+  speed: 0.6,
+  pointerInfluence: 0.5,
+  pointerStrength: 0.5,
+  refraction: 0.04,
   ripple: true
 });
