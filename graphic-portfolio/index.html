@@ -25,7 +25,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600;800;900&family=Inter+Tight:wght@700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 
 <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20width='64'%20height='64'%20rx='14'%20fill='%230C0C0B'/%3E%3Ctext%20x='32'%20y='45'%20font-family='Georgia,serif'%20font-style='italic'%20font-size='36'%20text-anchor='middle'%20fill='%23E9E6DE'%3ES%3C/text%3E%3C/svg%3E" />
-<link rel="stylesheet" href="styles.css?v=82" />
+<link rel="stylesheet" href="styles.css?v=83" />
 </head>
 <body>
 <div class="loader" id="loader" aria-hidden="true">
@@ -62,11 +62,11 @@
   </nav>
 </header>
 
-<!-- ===== hero: particle typography canvas (#heroParticles) + magnet field (#magnetGrid) ===== -->
+<!-- ===== hero: warptext WebGL wordmark (#heroWarp) + magnet field (#magnetGrid) ===== -->
 <section class="gallery-hero" id="top">
   <h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">STRV1Z — visual designer</h1>
   <div class="magnet-grid" id="magnetGrid" aria-hidden="true"></div>
-  <div class="gallery-mark" aria-hidden="true"><canvas id="heroParticles"></canvas></div>
+  <div class="gallery-mark"><div class="warp-text" id="heroWarp" role="img" aria-label="STRV1Z"></div><div class="warp-fallback" aria-hidden="true">STRV1Z</div></div>
   <p class="hero-tagline">From digital layouts to printed posters, I make visuals with a pulse.<br>Giving every frame a voice, and every composition a purpose.</p>
 </section>
 
@@ -125,6 +125,8 @@
 <div class="toast mono" id="toast">Added to cart ✓</div>
 <div class="cursor-label" id="cursorLabel" aria-hidden="true"></div>
 
-<script src="script.js?v=45"></script>
+<script src="script.js?v=46"></script>
+<script type="importmap">{"imports":{"ogl":"https://cdn.jsdelivr.net/npm/ogl@1.0.11/+esm"}}</script>
+<script type="module" src="warptext.js?v=1"></script>
 </body>
 </html>
