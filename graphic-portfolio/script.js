@@ -839,9 +839,10 @@ if($("orderForm")) $("orderForm").addEventListener("submit",e=>{
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const ctx = canvas.getContext("2d"); if(!ctx) return;
   const TEXT = "STRV1Z", INK = "#E9E6DE";
-  // phones: sparser dots, shorter push, lower particle ceiling
+  // phones: sparser dots, shorter push, lower particle ceiling — but dense
+  // enough to read (GAP 6 ≈ 300 dots for the hero word, not ~130)
   const small = matchMedia("(max-width: 700px)").matches;
-  const GAP = small ? 9 : 5, RADIUS = small ? 70 : 90, FORCE = small ? 10 : 14, SPRING = 0.07, FRICTION = 0.86, SIZE = 1.6, MAX = small ? 2200 : 6000;
+  const GAP = small ? 6 : 5, RADIUS = small ? 70 : 90, FORCE = small ? 10 : 14, SPRING = 0.07, FRICTION = 0.86, SIZE = small ? 1.3 : 1.6, MAX = small ? 2200 : 6000;
   let W = 0, H = 0, parts = [], raf = 0, cLeft = 0, cTop = 0;
   const mouse = { x:-9999, y:-9999 };
   function build(){
@@ -853,10 +854,15 @@ if($("orderForm")) $("orderForm").addEventListener("submit",e=>{
     canvas.style.width = W + "px"; canvas.style.height = H + "px";
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     const fam = "'Neue Montreal','Inter Tight',Inter,sans-serif";
+    // portrait phones: fit the full word edge-to-edge (never crop the brand)
+    // and lift it above center so the tagline below balances the composition
+    const portrait = H > W * 1.15;
+    const fitW = portrait ? W * 1.0 : W * 0.94;
     let px = Math.min(H * 0.42, W * 0.24);
     ctx.font = "700 " + px + "px " + fam;
     let tw = ctx.measureText(TEXT).width;
-    if(tw > W * 0.94){ px *= (W * 0.94) / tw; ctx.font = "700 " + px + "px " + fam; tw = ctx.measureText(TEXT).width; }
+    if(tw > fitW){ px *= fitW / tw; ctx.font = "700 " + px + "px " + fam; tw = ctx.measureText(TEXT).width; }
+    else if(portrait && tw < fitW){ px *= fitW / tw; ctx.font = "700 " + px + "px " + fam; tw = ctx.measureText(TEXT).width; }
     const off = document.createElement("canvas");
     off.width = Math.ceil(tw) + 8; off.height = Math.ceil(px * 1.2) + 8;
     const o = off.getContext("2d", { willReadFrequently:true });
@@ -866,7 +872,7 @@ if($("orderForm")) $("orderForm").addEventListener("submit",e=>{
     let gap = GAP;
     const count = g => { let n = 0; for(let y = 0; y < off.height; y += g) for(let x = 0; x < off.width; x += g){ if(data[(y * off.width + x) * 4 + 3] > 128) n++; } return n; };
     while(count(gap) > MAX && gap < 12) gap++;
-    const ox = (W - tw) / 2 - 4, oy = (H - off.height) / 2;
+    const ox = (W - tw) / 2 - 4, oy = (H - off.height) / 2 - (portrait ? H * 0.05 : 0);
     parts = [];
     for(let y = 0; y < off.height; y += gap) for(let x = 0; x < off.width; x += gap){
       if(data[(y * off.width + x) * 4 + 3] > 128)

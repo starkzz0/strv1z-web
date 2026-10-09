@@ -92,7 +92,13 @@ html.scroll-locked{overflow:hidden}
 .gallery-mark canvas{width:100%;height:100%;display:block}
 .hero-tagline{position:absolute;left:50%;top:calc(50% + min(42vh,24vw)*0.35 + 62px);transform:translateX(-50%);z-index:6;margin:0;max-width:620px;text-align:center;font-family:var(--sans);font-size:17px;font-weight:400;letter-spacing:-.2px;line-height:24px;color:var(--ink)}
 @media(max-width:860px){.hero-tagline{font-size:16px;line-height:22px;max-width:520px}}
-@media(max-width:640px){.hero-tagline{font-size:15px;line-height:21px;max-width:90%}}
+@media(max-width:640px){
+  /* mobile hero recompose: shorter stage, tagline as a predictable 88% block
+     with strict word-boundary wrapping (never split mid-word) */
+  .gallery-hero{min-height:86svh}
+  .gallery-mark{padding:0 8px}
+  .hero-tagline{font-size:15px;line-height:21px;width:88%;max-width:620px;top:calc(50% + 64px);overflow-wrap:normal;word-break:normal;hyphens:none;text-wrap:pretty}
+}
 .gallery-mark{position:absolute;inset:0;z-index:5;display:flex;align-items:center;justify-content:center;pointer-events:none;padding:0 16px}
 .magnet-grid{position:absolute;inset:0;z-index:2;display:grid;opacity:.3;pointer-events:none}
 .magnet-grid span{display:block;width:1px;height:4vmin;background:var(--ink);place-self:center;will-change:transform}
