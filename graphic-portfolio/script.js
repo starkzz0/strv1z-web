@@ -888,3 +888,19 @@ if($("orderForm")) $("orderForm").addEventListener("submit",e=>{
   if(hero){ splitChars(hero); setTimeout(()=>hero.classList.add("in"), 1150); }
 })();
 
+// hero headline fit guard - shrink until one line fits (covers slow or failed
+// webfonts and odd viewports). Only ever shrinks; never grows past the CSS size.
+(function(){
+  const h = document.querySelector(".kai-headline"); if(!h) return;
+  function fit(){
+    h.style.fontSize = "";
+    const max = h.parentElement.clientWidth || innerWidth;
+    let px = parseFloat(getComputedStyle(h).fontSize) || 100, guard = 0;
+    while(h.scrollWidth > max && guard++ < 40 && px > 40){ px *= max / h.scrollWidth; h.style.fontSize = px + "px"; }
+  }
+  fit();
+  if(document.fonts && document.fonts.ready) document.fonts.ready.then(()=>setTimeout(fit, 50));
+  if(document.fonts && document.fonts.load) document.fonts.load('700 100px Oswald').then(()=>fit()).catch(()=>{});
+  let tm = 0;
+  addEventListener("resize", ()=>{ clearTimeout(tm); tm = setTimeout(fit, 200); });
+})();

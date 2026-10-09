@@ -105,12 +105,12 @@ html.scroll-locked{overflow:hidden}
 .hero-kai{flex-direction:column;justify-content:flex-end;padding:0 clamp(16px,2.25vw,40px) clamp(20px,3vh,36px)}
 /* single monumental headline + attached sub row (no more split columns) */
 .kai-hero{display:flex;flex-direction:column;justify-content:flex-end;width:100%}
-.kai-headline{margin:0;font-family:Oswald,"Arial Narrow",sans-serif;font-weight:700;font-size:clamp(72px,32vw,560px);line-height:.8;letter-spacing:0;text-transform:uppercase;white-space:nowrap}
-.kai-sub{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;width:100%}
+.kai-headline{margin:0;font-family:Oswald,"Arial Narrow",sans-serif;font-weight:700;font-size:clamp(72px,32vw,560px);line-height:.86;letter-spacing:0;text-transform:uppercase;white-space:nowrap}
+.kai-sub{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;width:100%;margin-top:clamp(10px,2vh,20px)}
 .kai-block{min-width:0}
 .kai-block.right{text-align:right}
 
-.kai-meta{margin-top:clamp(8px,1.5vh,16px);font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;line-height:1.4;color:var(--muted)}
+.kai-meta{margin-top:0;font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;line-height:1.4;color:var(--muted)}
 .kai-meta p{margin:0 0 14px}
 .hand-note{display:inline-flex;align-items:center;gap:8px;font-family:var(--serif);font-style:italic;font-size:15px;letter-spacing:0;text-transform:none;color:var(--accent);text-decoration:none}
 .hand-note svg{width:44px;height:32px;overflow:visible}
