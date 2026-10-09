@@ -19,7 +19,6 @@
   --border:#292925;
   --accent:#B99A62;
 
-
   --head:"Neue Montreal","Inter Tight",Inter,"Helvetica Neue",Arial,sans-serif;
   --serif:"Instrument Serif",Georgia,serif;
   --sans:"Geist",Inter,system-ui,-apple-system,sans-serif;
@@ -103,12 +102,14 @@ html.scroll-locked{overflow:hidden}
 /* ---------- front hero: split monumental wordmark (STR / V1Z), brand dark ----------
    KAI-style: condensed caps at the edges, meta corners, handwritten notes, empty middle.
    Scoped to .hero-kai — everything below stays dark. */
-.hero-kai{flex-direction:column;justify-content:flex-end;padding:0 clamp(20px,3vw,44px) clamp(20px,3vh,36px)}
-.kai-row{display:flex;justify-content:space-between;align-items:flex-start;gap:4vw;width:100%}
-.kai-col{min-width:0}
-.kai-col.right{text-align:right}
-.kai-mid{flex:1 1 auto}
-.kai-word{font-family:Oswald,"Arial Narrow",sans-serif;font-weight:700;font-size:clamp(96px,26vw,430px);line-height:.8;letter-spacing:0;text-transform:uppercase;white-space:nowrap}
+.hero-kai{flex-direction:column;justify-content:flex-end;padding:0 clamp(16px,2.25vw,40px) clamp(20px,3vh,36px)}
+/* single monumental headline + attached sub row (no more split columns) */
+.kai-hero{display:flex;flex-direction:column;justify-content:flex-end;width:100%}
+.kai-headline{margin:0;font-family:Oswald,"Arial Narrow",sans-serif;font-weight:700;font-size:clamp(72px,32vw,560px);line-height:.8;letter-spacing:0;text-transform:uppercase;white-space:nowrap}
+.kai-sub{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;width:100%}
+.kai-block{min-width:0}
+.kai-block.right{text-align:right}
+
 .kai-meta{margin-top:clamp(8px,1.5vh,16px);font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;line-height:1.4;color:var(--muted)}
 .kai-meta p{margin:0 0 14px}
 .hand-note{display:inline-flex;align-items:center;gap:8px;font-family:var(--serif);font-style:italic;font-size:15px;letter-spacing:0;text-transform:none;color:var(--accent);text-decoration:none}
@@ -119,10 +120,10 @@ html.scroll-locked{overflow:hidden}
   .kai-loc{flex-direction:column;gap:6px}
 }
 @media(max-width:640px){
-  .kai-row{flex-direction:column;align-items:stretch;gap:10px}
-  .kai-mid{display:none}
-  .kai-col.right{text-align:left}
-  .kai-word{font-size:clamp(88px,34vw,220px)}
+  .kai-sub{flex-direction:column;gap:14px}
+
+  .kai-block.right{text-align:left}
+  .kai-headline{font-size:clamp(64px,31vw,200px)}
   .kai-meta{font-size:10px}
 }
 .warp-text{position:relative;display:block;width:100%;height:100%;min-height:220px;overflow:hidden;isolation:isolate;border-radius:inherit}
