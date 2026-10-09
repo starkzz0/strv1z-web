@@ -103,13 +103,13 @@ html.scroll-locked{overflow:hidden}
 /* ---------- front hero: split monumental wordmark (STR / V1Z), brand dark ----------
    KAI-style: condensed caps at the edges, meta corners, handwritten notes, empty middle.
    Scoped to .hero-kai — everything below stays dark. */
-.hero-kai{justify-content:flex-end;padding:0 clamp(20px,3vw,44px) clamp(20px,3vh,36px)}
+.hero-kai{flex-direction:column;justify-content:flex-end;padding:0 clamp(20px,3vw,44px) clamp(20px,3vh,36px)}
 .kai-row{display:flex;justify-content:space-between;align-items:flex-start;gap:4vw;width:100%}
 .kai-col{min-width:0}
 .kai-col.right{text-align:right}
 .kai-mid{flex:1 1 auto}
 .kai-word{font-family:Oswald,"Arial Narrow",sans-serif;font-weight:700;font-size:clamp(96px,26vw,430px);line-height:.8;letter-spacing:0;text-transform:uppercase;white-space:nowrap}
-.kai-meta{margin-top:clamp(14px,2.5vh,28px);font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;line-height:1.9;color:var(--muted)}
+.kai-meta{margin-top:clamp(14px,2.5vh,28px);font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;line-height:1.7;color:var(--muted)}
 .kai-meta p{margin:0 0 12px}
 .hand-note{display:inline-flex;align-items:center;gap:8px;font-family:var(--serif);font-style:italic;font-size:15px;letter-spacing:0;text-transform:none;color:var(--accent);text-decoration:none}
 .hand-note svg{width:44px;height:32px;overflow:visible}
