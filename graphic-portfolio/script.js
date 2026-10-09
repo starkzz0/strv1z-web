@@ -911,7 +911,7 @@ if($("orderForm")) $("orderForm").addEventListener("submit",e=>{
     canvas.width = W * dpr; canvas.height = H * dpr;
     canvas.style.width = W + "px"; canvas.style.height = H + "px";
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    const fam = "'Outfit',system-ui,sans-serif";
+    const fam = "'Neue Montreal','Inter Tight',Inter,sans-serif";
     // portrait phones: fit the full word edge-to-edge (never crop the brand)
     // and lift it above center so the tagline below balances the composition
     const portrait = H > W * 1.15;
