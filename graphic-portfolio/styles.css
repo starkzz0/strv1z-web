@@ -109,10 +109,15 @@ html.scroll-locked{overflow:hidden}
 .kai-col.right{text-align:right}
 .kai-mid{flex:1 1 auto}
 .kai-word{font-family:Oswald,"Arial Narrow",sans-serif;font-weight:700;font-size:clamp(96px,26vw,430px);line-height:.8;letter-spacing:0;text-transform:uppercase;white-space:nowrap}
-.kai-meta{margin-top:clamp(14px,2.5vh,28px);font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;line-height:1.7;color:var(--muted)}
-.kai-meta p{margin:0 0 12px}
+.kai-meta{margin-top:clamp(8px,1.5vh,16px);font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;line-height:1.4;color:var(--muted)}
+.kai-meta p{margin:0 0 14px}
 .hand-note{display:inline-flex;align-items:center;gap:8px;font-family:var(--serif);font-style:italic;font-size:15px;letter-spacing:0;text-transform:none;color:var(--accent);text-decoration:none}
 .hand-note svg{width:44px;height:32px;overflow:visible}
+/* location row: the note tucks beside the address lines (reference), not below */
+.kai-loc{display:flex;align-items:flex-start;gap:18px}
+@media(max-width:640px){
+  .kai-loc{flex-direction:column;gap:6px}
+}
 @media(max-width:640px){
   .kai-row{flex-direction:column;align-items:stretch;gap:10px}
   .kai-mid{display:none}
