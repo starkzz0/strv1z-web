@@ -4,6 +4,15 @@
         footer → cursor → reveal → loader → responsive.
    RULES: 1px borders only · no gradients · amber (#B99A62) sparingly.
    To recolor: edit :root. To respacing: see "sheet / sections" scale. */
+/* self-hosted Neue Montreal (fonts/*.woff2, converted from licensed OTFs) -
+   replaces the dead cdnfonts CDN. Only used faces are declared; Light pair
+   stays in fonts/ unreferenced. Add weights here if the design ever needs them. */
+@font-face{font-family:"Neue Montreal";src:url("fonts/NeueMontreal-Regular.woff2") format("woff2");font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:"Neue Montreal";src:url("fonts/NeueMontreal-Italic.woff2") format("woff2");font-weight:400;font-style:italic;font-display:swap}
+@font-face{font-family:"Neue Montreal";src:url("fonts/NeueMontreal-Medium.woff2") format("woff2");font-weight:500;font-style:normal;font-display:swap}
+@font-face{font-family:"Neue Montreal";src:url("fonts/NeueMontreal-MediumItalic.woff2") format("woff2");font-weight:500;font-style:italic;font-display:swap}
+@font-face{font-family:"Neue Montreal";src:url("fonts/NeueMontreal-Bold.woff2") format("woff2");font-weight:700;font-style:normal;font-display:swap}
+@font-face{font-family:"Neue Montreal";src:url("fonts/NeueMontreal-BoldItalic.woff2") format("woff2");font-weight:700;font-style:italic;font-display:swap}
 :root{
   --bg:#0C0C0B; --surface:#141412; --hover:#1B1B18;
   --ink:#E9E6DE; --muted:#96938B; --faint:#6b6963;
