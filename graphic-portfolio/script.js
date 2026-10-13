@@ -296,7 +296,7 @@ const WORKS = [
     }
   }
   // project preview — full metadata only on click
-  function openWork(i){
+  function openWork(i, quiet){
     const w = WORKS[i]; if(!w || !$("workModal")) return;
     openWorkIdx = i;
     // variants: extra images per work (defaults to the main image)
@@ -318,7 +318,7 @@ const WORKS = [
     m.classList.remove("closing"); m.classList.add("open"); m.setAttribute("aria-hidden","false");
     lockScroll(true);
     const pvBox = m.querySelector(".pv");
-    if(pvBox){
+    if(pvBox && !quiet){
       pvBox.classList.remove("go"); void pvBox.offsetWidth;
       const kick = ()=>{ pvBox.classList.add("go"); const x=$("workClose"); if(x){ try{ x.focus({preventScroll:true}); }catch(e){} } };
       requestAnimationFrame(()=>requestAnimationFrame(kick));
@@ -335,10 +335,20 @@ const WORKS = [
     if(media){ media.onerror = function(){ this.onerror=null; this.src=it.fb||w.fb||it.img; }; media.src = it.img; }
     document.querySelectorAll("#workVariants button").forEach(x=>x.classList.toggle("on", x === b));
   });
-  // lightbox stepping — cycle the archive with wrap-around
+  // lightbox stepping — soft cross-slide (no modal re-pop, no focus steal);
+  // swaps content mid-fade, instant under reduced motion
+  let stepTimer = 0;
   function stepWork(d){
     if(!WORKS.length) return;
-    openWork(openWorkIdx = (openWorkIdx + d + WORKS.length) % WORKS.length);
+    const next = (openWorkIdx + d + WORKS.length) % WORKS.length;
+    const box = document.querySelector("#workModal .pv");
+    if(!box || matchMedia("(prefers-reduced-motion: reduce)").matches){ openWork(next, true); return; }
+    clearTimeout(stepTimer);
+    box.classList.remove("stepping");
+    box.style.setProperty("--step-dir", d > 0 ? 1 : -1);
+    void box.offsetWidth;
+    box.classList.add("stepping");
+    stepTimer = setTimeout(()=>{ openWork(next, true); box.classList.remove("stepping"); }, 170);
   }
   if($("workPrev")) $("workPrev").addEventListener("click", ()=>stepWork(-1));
   if($("workNext")) $("workNext").addEventListener("click", ()=>stepWork(1));
