@@ -457,7 +457,17 @@ footer a:hover{color:var(--text)}
 .cat:hover .cat-glass,.cat.open .cat-glass{transform:translateY(-8px)}
 .cat.open .cat-glass{border-color:var(--text)}
 @media(prefers-reduced-motion:reduce){.cat-layer,.cat-glass{transition:none}}
-@media(max-width:860px){.cat-row{grid-template-columns:1fr}}
+@media(max-width:860px){
+  .cat-row{grid-template-columns:repeat(3,1fr);gap:16px}
+  .cat-glass{padding:14px}
+  .cat-name{font-size:1.1rem}
+}
+@media(max-width:640px){
+  .cat-row{gap:12px}
+  .cat-glass{padding:8px 10px;gap:4px}
+  .cat-name{font-size:.8rem}
+  .cat-count{font-size:10px}
+}
 
 /* ---------- split-text mask reveal (staggered character entrance) ---------- */
 .split-mask{display:inline-block;overflow:hidden;vertical-align:bottom;padding:.02em .06em .12em;margin:-.02em -.06em -.12em;font:inherit}
