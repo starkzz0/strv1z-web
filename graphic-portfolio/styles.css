@@ -556,8 +556,8 @@ html.js .rv-scale.in{opacity:1;transform:none}
 }
 @media(prefers-reduced-motion:reduce){.contact-pill{transition:none}}
 /* body copy - serif roman; mono labels and metadata keep their voice */
-.about-card p:not(.mono),.faq .body .body-in,.term p:not(.mono),.term blockquote,.page-lede,.soft-note{font-family:var(--serif);font-style:normal}
+.about-card p:not(.mono),.faq .body .body-in,.term p:not(.mono),.term blockquote,.page-lede,.soft-note{font-family:var(--head);font-style:normal;font-weight:400}
 /* paragraph scale — lede and body stepped up 3-7px over the old sizes */
 .about-card > p:first-child,.page-lede{font-size:clamp(20px,1.6vw,24px);line-height:1.4}
 .faq .body .body-in,.term p:not(.mono),.term blockquote,.about-card > p:not(:first-child):not(.mono),.soft-note{font-size:clamp(18px,1.25vw,20px);line-height:1.65}
-.about-card p.mono,.formbox p.mono{font-family:var(--serif);font-style:normal;font-size:14px;letter-spacing:.08em}
+.about-card p.mono,.formbox p.mono{font-family:var(--head);font-style:normal;font-weight:400;font-size:14px;letter-spacing:.08em}
