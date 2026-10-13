@@ -520,8 +520,8 @@ html.js .rv-scale.in{opacity:1;transform:none}
 .pv-nav{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:14px}
 .pv-nav button{font-family:var(--mono);font-size:11px;letter-spacing:.1em;background:none;border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:9px 14px;cursor:pointer}
 .pv-nav button:hover{border-color:var(--text);color:var(--text)}
-/* lightbox step transition — art + info cross-slide softly (JS toggles .stepping) */
-.pv-art,.pv-info{transition:opacity .18s ease,transform .18s ease}
-#workModal .pv.stepping .pv-art,#workModal .pv.stepping .pv-info{opacity:0;transform:translateX(calc(var(--step-dir,1)*-14px))}
-@media(prefers-reduced-motion:reduce){.pv-art,.pv-info{transition:none}}
+
 .pv{touch-action:pan-y}
+/* lightbox step transition - whole card cross-slides softly (JS toggles .stepping) */
+#workModal .pv.stepping{opacity:.25;transform:translateX(calc(var(--step-dir,1)*-20px)) scale(.985);transition:opacity .16s ease,transform .16s ease}
+@media(prefers-reduced-motion:reduce){#workModal .pv.stepping{transition:none}}
