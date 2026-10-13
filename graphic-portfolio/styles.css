@@ -180,7 +180,7 @@ html.scroll-locked{overflow:hidden}
 .sheet{background:var(--bg);border-top:1px solid var(--border);position:relative;z-index:10;padding-bottom:0}
 .sys{display:flex;align-items:center;gap:12px;max-width:88rem;margin:0 auto;padding:clamp(28px,4vw,56px) 28px 0}
 .sys::before{content:"";height:1px;width:32px;background:var(--border)}
-.sys span{color:var(--muted);font-family:var(--mono);font-size:12px;letter-spacing:.2em}
+.sys > span{color:var(--muted);font-family:var(--mono);font-size:12px;letter-spacing:.2em}
 .sec{max-width:88rem;margin:0 auto;padding:clamp(20px,2.5vw,40px) 28px 0}
 .kicker{font-family:var(--mono);font-size:12px;letter-spacing:.18em;color:var(--muted);text-transform:uppercase;margin-bottom:20px;display:block}
 .kicker.muted-k{color:var(--muted)}
@@ -459,8 +459,8 @@ footer a:hover{color:var(--text)}
 @media(max-width:860px){.cat-row{grid-template-columns:1fr}}
 
 /* ---------- split-text mask reveal (staggered character entrance) ---------- */
-.split-mask{display:inline-block;overflow:hidden;vertical-align:bottom;padding:.02em .06em .12em;margin:-.02em -.06em -.12em}
-.split-ch{display:inline-block;transform:translateY(115%) rotate(4deg);opacity:0;transition:transform .7s cubic-bezier(.22,1,.36,1),opacity .5s ease;transition-delay:calc(var(--i,0)*22ms),calc(var(--i,0)*22ms)}
+.split-mask{display:inline-block;overflow:hidden;vertical-align:bottom;padding:.02em .06em .12em;margin:-.02em -.06em -.12em;font:inherit}
+.split-ch{display:inline-block;font:inherit;transform:translateY(115%) rotate(4deg);opacity:0;transition:transform .7s cubic-bezier(.22,1,.36,1),opacity .5s ease;transition-delay:calc(var(--i,0)*22ms),calc(var(--i,0)*22ms)}
 .split-root.in .split-ch{transform:none;opacity:1}
 @media(prefers-reduced-motion:reduce){.split-ch{transform:none;opacity:1;transition:none}}
 
@@ -489,7 +489,7 @@ html.js .rv-scale.in{opacity:1;transform:none}
    metadata. Text keeps its original LEFT alignment (no site-wide
    centering); layout rules above remain untouched. */
 .kicker,.page-kicker{font-size:13px}
-.sys span{font-size:12px}
+.sys > span{font-size:12px}
 .term h4{font-size:.85rem}
 
 @media(max-width:1000px){
