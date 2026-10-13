@@ -560,4 +560,4 @@ html.js .rv-scale.in{opacity:1;transform:none}
 /* paragraph scale — lede and body stepped up 3-7px over the old sizes */
 .about-card > p:first-child,.page-lede{font-size:clamp(20px,1.6vw,24px);line-height:1.4}
 .faq .body .body-in,.term p:not(.mono),.term blockquote,.about-card > p:not(:first-child):not(.mono),.soft-note{font-size:clamp(18px,1.25vw,20px);line-height:1.65}
-.about-card p.mono,.formbox p.mono{font-family:var(--serif);font-style:normal;font-size:14px}
+.about-card p.mono,.formbox p.mono{font-family:var(--serif);font-style:normal;font-size:14px;letter-spacing:.08em}
