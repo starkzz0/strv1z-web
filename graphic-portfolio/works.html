@@ -74,21 +74,21 @@
   <section class="sec" id="formats">
     <span class="kicker">Browse by format</span>
     <div class="cat-row" id="catRow">
-      <button type="button" class="cat" data-format="posters" aria-pressed="false" aria-label="Show posters">
+      <button type="button" class="cat" data-format="posters" aria-pressed="false" aria-label="Posters, 2 pieces">
         <span class="cat-stack" aria-hidden="true">
           <span class="cat-layer b1"><img src="images/feat-1.l.jpg" alt="" loading="lazy" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=800&auto=format&fit=crop'"></span>
           <span class="cat-layer b2"><img src="images/feat-2.l.jpg" alt="" loading="lazy" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1512496015851-a90fb38ba796?q=80&w=800&auto=format&fit=crop'"></span>
           <span class="cat-glass"><span class="cat-name">Posters <span class="cat-count">02</span></span></span>
         </span>
       </button>
-      <button type="button" class="cat" data-format="banners" aria-pressed="false" aria-label="Show banners">
+      <button type="button" class="cat" data-format="banners" aria-pressed="false" aria-label="Banners, 2 pieces">
         <span class="cat-stack" aria-hidden="true">
           <span class="cat-layer b1"><img src="https://images.unsplash.com/photo-1568557412756-7d219873dd11?w=800&q=80&auto=format&fit=crop" alt="" loading="lazy"></span>
           <span class="cat-layer b2"><img src="https://images.unsplash.com/photo-1624344965194-6aa6729ad832?w=800&q=80&auto=format&fit=crop" alt="" loading="lazy"></span>
           <span class="cat-glass"><span class="cat-name">Banners <span class="cat-count">02</span></span></span>
         </span>
       </button>
-      <button type="button" class="cat" data-format="layouts" aria-pressed="false" aria-label="Show layouts">
+      <button type="button" class="cat" data-format="layouts" aria-pressed="false" aria-label="Layouts, 2 pieces">
         <span class="cat-stack" aria-hidden="true">
           <span class="cat-layer b1"><img src="https://images.unsplash.com/photo-1633382148761-d56d55cee3cd?w=800&q=80&auto=format&fit=crop" alt="" loading="lazy"></span>
           <span class="cat-layer b2"><img src="https://images.unsplash.com/photo-1514906689926-25ba6dcb584b?w=800&q=80&auto=format&fit=crop" alt="" loading="lazy"></span>
@@ -96,8 +96,10 @@
         </span>
       </button>
     </div>
+    <div class="cat-dots" aria-label="Choose format"><button type="button" aria-label="Go to Posters"></button><button type="button" aria-label="Go to Banners"></button><button type="button" aria-label="Go to Layouts"></button></div>
   </section>
   <section class="sec" id="workIndex">
+    <div class="work-index-bar"><span class="mono muted" id="formatLabel">ALL / 06</span><button type="button" id="showAll" class="mono muted" hidden>Show all (06)</button></div>
     <div class="wgrid" id="workGrid"></div>
     <div class="wlist" id="workList" hidden></div>
     <p class="soft-note">Custom work based on any of these? <a href="index.html#contact">contact →</a></p>
@@ -123,6 +125,6 @@
   </div>
 </div>
 
-<script src="script.js?v=56"></script>
+<script src="script.js?v=58"></script>
 </body>
 </html>

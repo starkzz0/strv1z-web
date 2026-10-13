@@ -426,6 +426,14 @@ const WORKS = [
   }
   if(typeof revealScan === "function") revealScan();
   // expose the filter driver so the nav dropdown (bound on every page) can drive it
+  // index bar + show-all — label tracks the active filter with real counts
+  function updateIndexUI(){
+    const label = $("formatLabel"), all = $("showAll");
+    const n = workFilter === "all" ? WORKS.length : WORKS.filter(w=>w.format===workFilter).length;
+    const name = workFilter === "all" ? "ALL" : workFilter.toUpperCase();
+    if(label) label.textContent = name + " / " + String(n).padStart(2,"0");
+    if(all) all.hidden = workFilter === "all";
+  }
   window.__strv1zWorks = { setFilter(f){
     workFilter = f;
     document.querySelectorAll("#catRow .cat").forEach(x=>{
@@ -434,14 +442,12 @@ const WORKS = [
       x.setAttribute("aria-pressed", String(on));
     });
     renderWorks();
+    updateIndexUI();
   } };
   // category fan-cards: fan open on click, filter the grid, click again for all
   (function(){
     const row = $("catRow"); if(!row) return;
     const cards = [...row.querySelectorAll(".cat")];
-    const now = new Date();
-    row.querySelectorAll(".cat-month").forEach(b=>b.textContent = now.toLocaleString([], {month:"long"}));
-    row.querySelectorAll(".cat-year").forEach(s=>s.textContent = now.getFullYear());
     cards.forEach(c=>{
       const n = WORKS.filter(w=>w.format===c.dataset.format).length;
       const cc = c.querySelector(".cat-count"); if(cc) cc.textContent = String(n).padStart(2,"0");
@@ -457,9 +463,48 @@ const WORKS = [
       const next = c.classList.contains("open") ? "all" : c.dataset.format;
       workFilter = next;
       cards.forEach(x=>{ const on = x.dataset.format===next; x.classList.toggle("open", on); x.setAttribute("aria-pressed", on); });
-      renderWorks();
+      const grid = $("workGrid");
+      const apply = ()=>{ renderWorks(); updateIndexUI(); };
+      if(grid && matchMedia("(max-width:767px)").matches && !matchMedia("(prefers-reduced-motion: reduce)").matches){
+        grid.classList.add("fading");
+        setTimeout(()=>{ apply(); requestAnimationFrame(()=>grid.classList.remove("fading")); setTimeout(()=>grid.classList.remove("fading"), 600); }, 200);
+      } else apply();
       if(next !== "all"){ const idx = $("workIndex"); if(idx) smoothTo("#workIndex"); }
     }));
+    // show-all resets from the index bar (no scroll — the grid is already in view)
+    if($("showAll")) $("showAll").addEventListener("click", ()=>{
+      workFilter = "all";
+      cards.forEach(x=>{ x.classList.remove("open"); x.setAttribute("aria-pressed", "false"); });
+      renderWorks(); updateIndexUI();
+    });
+    // keyboard arrows move focus between folders
+    row.addEventListener("keydown", e=>{
+      if(e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
+      const i = cards.findIndex(c=>c === document.activeElement || c.contains(document.activeElement));
+      const n = (i + (e.key === "ArrowRight" ? 1 : -1) + cards.length) % cards.length;
+      cards[n].focus(); e.preventDefault();
+    });
+    // dot indicators follow the scroller (IO primary, scroll-position fallback)
+    (function(){
+      const dots = [...document.querySelectorAll(".cat-dots button")];
+      if(!dots.length) return;
+      const setDot = i => dots.forEach((d,di)=>{ const on = di === i; d.classList.toggle("on", on); if(on) d.setAttribute("aria-current","true"); else d.removeAttribute("aria-current"); });
+      const io = new IntersectionObserver(es=>{
+        es.forEach(en=>{ if(!en.isIntersecting) return; setDot(cards.indexOf(en.target)); });
+      }, {root: row, threshold:.6});
+      cards.forEach(s=>io.observe(s));
+      let lastDotT = 0;
+      row.addEventListener("scroll", ()=>{
+        const now = performance.now(); if(now - lastDotT < 120) return; lastDotT = now;
+        const rr = row.getBoundingClientRect(), mid = rr.left + rr.width / 2;
+        let best = 0, bestD = Infinity;
+        cards.forEach((s,i)=>{ const b = s.getBoundingClientRect(); const d = Math.abs((b.left + b.width / 2) - mid); if(d < bestD){ bestD = d; best = i; } });
+        setDot(best);
+      }, {passive:true});
+      setDot(0);
+      dots.forEach((d,di)=>d.addEventListener("click", ()=>cards[di].scrollIntoView({inline:"center",block:"nearest",behavior:matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"})));
+    })();
+    updateIndexUI();
   })();
   // warm the poster files so the popup opens without decode jank
   const warm = ()=>WORKS.forEach(w=>{ const im = new Image(); im.src = w.img; });
