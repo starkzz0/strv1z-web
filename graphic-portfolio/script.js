@@ -15,12 +15,12 @@ const SITE = { name:"strv1z", giant:"STRV1Z", city:"YOUR CITY", email:"hello@exa
   shopify: { domain:"", storefrontToken:"", collectionHandle:"posters" }
 };
 const POSTERS = [
-  { id:"NOISE", title:"Noise Zine", desc:"GRUNGE TYPE / 2025", bg:"#241A1C" },
+  { id:"NOISE", title:"Noise Zine", desc:"GRUNGE TYPE / 2025", bg:"#181818" },
   { id:"BLOOM", title:"Bloom Fest", desc:"TEXTURED / 2025", bg:"#24241F" },
-  { id:"FERN", title:"Fern & Co", desc:"BRAND POSTER / 2024", bg:"#241A1C" },
-  { id:"ARCADE", title:"Retro Arcade", desc:"LOGO + POSTER / 2024", bg:"#241A1C" },
+  { id:"FERN", title:"Fern & Co", desc:"BRAND POSTER / 2024", bg:"#181818" },
+  { id:"ARCADE", title:"Retro Arcade", desc:"LOGO + POSTER / 2024", bg:"#181818" },
   { id:"SUNSET", title:"Sunset Records", desc:"GIG POSTER / 2024", bg:"#2A2118" },
-  { id:"TYPE", title:"Grotesk Spec", desc:"TYPE POSTER / 2023", bg:"#241A1C" },
+  { id:"TYPE", title:"Grotesk Spec", desc:"TYPE POSTER / 2023", bg:"#181818" },
 ];
 const FAQS = [
   ["What services do you provide?","Posters, logos, brand kits, social packs, typography and art direction."],
@@ -648,16 +648,16 @@ if(hf) hf.addEventListener("submit", e=>{
 // shopifyVariantId/shopifyHandle: leave null until Shopify is connected.
 // ============================================================
 // TEMPLATE:
-// { id:"p9", title:"My Poster", cat:"grunge", price:49, old:null, rating:5.0, reviews:10, badge:"NEW", year:"2026", img:"images/my-poster.jpg", fb:"", bg:"#241A1C", desc:"One line.", specs:["A3 print-ready","Digital files"], shopifyVariantId:null, shopifyHandle:"my-poster" },
+// { id:"p9", title:"My Poster", cat:"grunge", price:49, old:null, rating:5.0, reviews:10, badge:"NEW", year:"2026", img:"images/my-poster.jpg", fb:"", bg:"#181818", desc:"One line.", specs:["A3 print-ready","Digital files"], shopifyVariantId:null, shopifyHandle:"my-poster" },
 const PRODUCTS = [
   { id:"p1", title:"Persona Gold", cat:"grunge", price:49, old:69, rating:4.9, reviews:128, badge:"BESTSELLER", year:"2025", dims:"3600 × 4500 PX", img:"images/feat-1.l.jpg", fb:"https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=800&auto=format&fit=crop", bg:"#2A2118", desc:"Gold-foil grunge anime poster. Hand-built type + grain, printed on 250gsm matte.", specs:["A3 / A2 print-ready","250gsm matte + digital files","Limited run of 100","Ships in 3–5 days"], shopifyVariantId:null, shopifyHandle:"persona-gold" },
   { id:"p2", title:"Egress", cat:"type", price:39, old:55, rating:4.8, reviews:96, badge:"NEW", year:"2025", dims:"3600 × 4500 PX", img:"images/feat-2.l.jpg", fb:"https://images.unsplash.com/photo-1512496015851-a90fb38ba796?q=80&w=800&auto=format&fit=crop", bg:"#24241F", desc:"Pale collage poster. Soft paper texture, minimal type system.", specs:["A3 / A2 print-ready","200gsm silk + digital","Open edition","Ships in 3–5 days"], shopifyVariantId:null, shopifyHandle:"egress" },
-  { id:"p3", title:"Noise Zine", cat:"grunge", price:45, old:null, rating:4.9, reviews:74, badge:"LOW STOCK", year:"2025", bg:"#241A1C", desc:"Raw xerox-style zine poster. Loud headers, dirty borders.", specs:["A3 + social kit","Digital + print PDF","Only 12 left","Ships in 48h"], shopifyVariantId:null, shopifyHandle:"noise-zine" },
+  { id:"p3", title:"Noise Zine", cat:"grunge", price:45, old:null, rating:4.9, reviews:74, badge:"LOW STOCK", year:"2025", bg:"#181818", desc:"Raw xerox-style zine poster. Loud headers, dirty borders.", specs:["A3 + social kit","Digital + print PDF","Only 12 left","Ships in 48h"], shopifyVariantId:null, shopifyHandle:"noise-zine" },
   { id:"p4", title:"Bloom Fest", cat:"gig", price:35, old:45, rating:4.7, reviews:61, badge:null, year:"2025", bg:"#24241F", desc:"Festival poster with textured bloom type. High contrast for walls.", specs:["A3 / A2","Digital included","Open edition","Ships in 3–5 days"], shopifyVariantId:null, shopifyHandle:"bloom-fest" },
-  { id:"p5", title:"Fern & Co", cat:"brand", price:59, old:null, rating:5.0, reviews:42, badge:"LIMITED", year:"2024", bg:"#241A1C", desc:"Brand poster pack — logo lockup + poster + mini guideline.", specs:["Logo + poster set","Vector + print PDF","Commercial license","1–2 weeks custom"], shopifyVariantId:null, shopifyHandle:"fern-co" },
-  { id:"p6", title:"Retro Arcade", cat:"gig", price:29, old:39, rating:4.6, reviews:88, badge:"SALE", year:"2024", bg:"#241A1C", desc:"Neon arcade poster. Perfect for rooms / studios.", specs:["A3 print-ready","Digital files","Open edition","Ships in 3–5 days"], shopifyVariantId:null, shopifyHandle:"retro-arcade" },
+  { id:"p5", title:"Fern & Co", cat:"brand", price:59, old:null, rating:5.0, reviews:42, badge:"LIMITED", year:"2024", bg:"#181818", desc:"Brand poster pack — logo lockup + poster + mini guideline.", specs:["Logo + poster set","Vector + print PDF","Commercial license","1–2 weeks custom"], shopifyVariantId:null, shopifyHandle:"fern-co" },
+  { id:"p6", title:"Retro Arcade", cat:"gig", price:29, old:39, rating:4.6, reviews:88, badge:"SALE", year:"2024", bg:"#181818", desc:"Neon arcade poster. Perfect for rooms / studios.", specs:["A3 print-ready","Digital files","Open edition","Ships in 3–5 days"], shopifyVariantId:null, shopifyHandle:"retro-arcade" },
   { id:"p7", title:"Sunset Records", cat:"gig", price:32, old:null, rating:4.8, reviews:53, badge:null, year:"2024", bg:"#2A2118", desc:"Gig poster with sunset grain. Warm reds, bold grotesk.", specs:["A3 / A2","Digital included","Open edition","Ships in 3–5 days"], shopifyVariantId:null, shopifyHandle:"sunset-records" },
-  { id:"p8", title:"Grotesk Spec", cat:"type", price:42, old:52, rating:4.9, reviews:67, badge:"BESTSELLER", year:"2023", bg:"#241A1C", desc:"Type specimen poster. 12 weights, grid notes, print-sharp.", specs:["A2 type sheet","Print PDF + PNG","Designers favourite","Ships in 3–5 days"], shopifyVariantId:null, shopifyHandle:"grotesk-spec" },
+  { id:"p8", title:"Grotesk Spec", cat:"type", price:42, old:52, rating:4.9, reviews:67, badge:"BESTSELLER", year:"2023", bg:"#181818", desc:"Type specimen poster. 12 weights, grid notes, print-sharp.", specs:["A2 type sheet","Print PDF + PNG","Designers favourite","Ships in 3–5 days"], shopifyVariantId:null, shopifyHandle:"grotesk-spec" },
 ];
 // ---- SHOPIFY SUPPORT (demo mode: fill SITE.shopify.domain to go live) ----
 function shopifyCfg(){
