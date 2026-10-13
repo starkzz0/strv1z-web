@@ -212,7 +212,7 @@ const syncUniforms = (program, props) => {
 
 const DEFAULTS = {
   text: 'STRV1Z',
-  color: '#E9E6DE',
+  color: '#EEE5DC',
   warpStrength: 0.08,
   warpScale: 1.7,
   speed: 0.55,
@@ -483,7 +483,7 @@ function initWarpText(container, props) {
 const heroWarp = document.getElementById('heroWarp');
 if (heroWarp) initWarpText(heroWarp, {
   text: 'STRV1Z',
-  color: '#E9E6DE',
+  color: '#EEE5DC',
   fontFamily: "'Neue Montreal','Inter Tight',sans-serif",
   fontWeight: 700,
   letterSpacing: '-0.02em',
