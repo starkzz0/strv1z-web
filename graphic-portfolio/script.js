@@ -1,19 +1,17 @@
-// EDIT ONCE — global site settings (name, city, contact email, shopify)
+// EDIT ONCE — global site settings (name, city, contact email, form endpoint)
 // ============================================================
 // STRV1Z — behavior (graphic-portfolio/script.js)
-// ★ SHOP STATUS — set true to re-enable shop + cart everywhere.
-// While false: cart stays shut, buy buttons show "opening soon".
-// (Also re-link SHOP in the navs/footers when you flip this.)
+// Commissions only: custom posters, banners, layouts, album artwork.
+// Booking: two slots at a time, email-first.
+// See terms.html for commission terms.
 // ============================================================
-const SHOP_ENABLED = false;
 // MAP: loader → hero canvas → clock → smooth scroll → header → page
-//      transitions → tilted grid → WORKS ★ → shop (products/cart/shopify)
-//      → info modal → TOC sidebar → reveal on scroll → forms.
+//      transitions → tilted grid → WORKS ★
+//      → TOC sidebar → reveal on scroll → forms.
 // NOTHING below needs editing except the marked ★ arrays + SITE above.
 // ============================================================
 const SITE = { name:"strv1z", giant:"STRV1Z", city:"YOUR CITY", email:"hello@example.com",
   web3formsKey:"", // ★ paste your access key from web3forms.com (free, no account) to make forms deliver; empty = mailto fallback
-  shopify: { domain:"", storefrontToken:"", collectionHandle:"posters" }
 };
 const POSTERS = [
   { id:"NOISE", title:"Noise Zine", desc:"GRUNGE TYPE / 2025", bg:"#181818" },
@@ -32,6 +30,8 @@ const FAQS = [
   ["What files and rights do I get?","Print-ready PDF, web PNG and source files on request. Your commission includes commercial use for the agreed purpose — full terms live on the <a href='terms.html'>Terms page</a>."],
 ];
 const $ = id => document.getElementById(id);
+// drop orphaned shop data from retired carts (shop removed; commissions only)
+try{localStorage.removeItem("strv1z_cart");localStorage.removeItem("strv1z_shopify");}catch(e){}
 // entrance fade plays once per session — later page views paint instantly
 try{ sessionStorage.setItem("strv1z_seen","1"); }catch(e){}
 // loader — fast minimal veil: eased 0→100 counter, quick fade-rise exit (guarded, skips on reduced motion)
@@ -260,8 +260,8 @@ if(tilted){
 // TEMPLATE:
 // { title:"My Poster", cat1:"Grunge", cat2:"Poster", year:"2026", img:"images/my-poster.jpg", fb:"", dims:"3600 × 4500 PX", desc:"One-line description.", process:["Step one","Step two"], variants:[{ label:"VERSION 01", img:"images/my-poster.jpg" },{ label:"VERSION 02", img:"images/my-poster-detail.jpg" }] },
 const WORKS = [
-  { title:"Persona Gold", cat1:"Grunge", cat2:"Poster", format:"posters", year:"2025", dims:"3600 × 4500 PX", img:"images/feat-1.l.jpg", fb:"https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=900&auto=format&fit=crop", desc:"Gold-foil grunge poster built around a single heavyweight portrait and hand-set type. Grain, tears and misregistration kept in on purpose.", process:["Sketch + reference board","Custom type setting","Texture + distress pass","Print + social export"] },
-  { title:"Egress", cat1:"Type", cat2:"Poster", format:"posters", year:"2025", dims:"3600 × 4500 PX", img:"images/feat-2.l.jpg", fb:"https://images.unsplash.com/photo-1512496015851-a90fb38ba796?q=80&w=900&auto=format&fit=crop", desc:"Pale collage study in restraint — soft paper tones, one quiet grid, minimal type doing maximal work.", process:["Collage studies","Grid + type system","Paper texture grade","Print + social export"] },
+  { title:"Persona Gold", cat1:"Grunge", cat2:"Poster", format:"posters", year:"2025", w:1800,h:2400, dims:"3600 × 4500 PX", img:"images/feat-1.l.jpg", fb:"https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=900&auto=format&fit=crop", desc:"Gold-foil grunge poster built around a single heavyweight portrait and hand-set type. Grain, tears and misregistration kept in on purpose.", process:["Sketch + reference board","Custom type setting","Texture + distress pass","Print + social export"] },
+  { title:"Egress", cat1:"Type", cat2:"Poster", format:"posters", year:"2025", w:1800,h:2400, dims:"3600 × 4500 PX", img:"images/feat-2.l.jpg", fb:"https://images.unsplash.com/photo-1512496015851-a90fb38ba796?q=80&w=900&auto=format&fit=crop", desc:"Pale collage study in restraint — soft paper tones, one quiet grid, minimal type doing maximal work.", process:["Collage studies","Grid + type system","Paper texture grade","Print + social export"] },
   { title:"Retro Arcade", cat1:"Brand", cat2:"Poster", format:"banners", year:"2024", dims:"3600 × 4500 PX", img:"https://images.unsplash.com/photo-1568557412756-7d219873dd11?w=900&q=80&auto=format&fit=crop", desc:"Neon arcade identity piece — lockup, poster and color system for a fictional retro venue.", process:["Lockup sketches","Neon color system","Poster application","Brand sheet export"] },
   { title:"Sunset Records", cat1:"Gig", cat2:"Poster", format:"banners", year:"2024", dims:"3600 × 4500 PX", img:"https://images.unsplash.com/photo-1624344965194-6aa6729ad832?w=900&q=80&auto=format&fit=crop", desc:"Gig poster in warm sunset grain — bold grotesk over heat-toned photography.", process:["Photo treatment","Grotesk setting","Grain + color grade","Print + social export"] },
   { title:"Grotesk Spec", cat1:"Type", cat2:"Poster", format:"layouts", year:"2023", dims:"3600 × 4500 PX", img:"https://images.unsplash.com/photo-1633382148761-d56d55cee3cd?w=900&q=80&auto=format&fit=crop", desc:"Twelve-weight type specimen sheet — grid notes, sizes and print-sharp setting for designers.", process:["Weight survey","Grid construction","Specimen setting","A2 print export"] },
@@ -278,7 +278,7 @@ const WORKS = [
       .sort((a,b)=>(parseInt(a.w.year,10)||0)-(parseInt(b.w.year,10)||0));
     if($("workCount")) $("workCount").textContent = String(list.length).padStart(2,"0") + " / " + String(WORKS.length).padStart(2,"0");
     wg.innerHTML = list.map(({w,i},pos)=>`
-    <button type="button" class="wcard" data-work="${i}" aria-label="${w.title} — view details"><span class="wcard-media"><img src="${w.img}" onerror="this.onerror=null;this.src='${w.fb||w.img}'" alt="${w.title}" loading="${pos<4?"eager":"lazy"}"><span class="wcard-hover"><span class="n">${String(pos+1).padStart(2,"0")} / ${String(list.length).padStart(2,"0")}</span><span class="t">${w.title}</span><span>${w.cat1} · ${w.cat2} · ${w.year}</span></span></span></button>`).join("");
+    <button type="button" class="wcard" data-work="${i}" aria-label="${w.title} — view details"><span class="wcard-media"><img src="${w.img}"${w.w?` width="${w.w}" height="${w.h}"`:""} onerror="this.onerror=null;this.src='${w.fb||w.img}'" alt="${w.title}" loading="${pos<4?"eager":"lazy"}"><span class="wcard-hover"><span class="n">${String(pos+1).padStart(2,"0")} / ${String(list.length).padStart(2,"0")}</span><span class="t">${w.title}</span><span>${w.cat1} · ${w.cat2} · ${w.year}</span></span></span></button>`).join("");
     wl.innerHTML = list.map(({w,i},pos)=>`
     <button type="button" class="wrow" data-work="${i}"><span class="cats"><span>${w.cat1}</span><span>${w.cat2}</span></span><h3>${w.title}</h3><span class="yr">${w.year}</span><span class="n">${String(pos+1).padStart(2,"0")}</span></button>`).join("");
     if(typeof revealScan === "function") revealScan();
@@ -310,10 +310,10 @@ const WORKS = [
     if($("workVariants")) $("workVariants").innerHTML = vs.map((v,vi)=>`<button type="button" data-v="${vi}">${v.label}</button>`).join("");
     showVariant(0);
     if($("workTitle")) $("workTitle").textContent = w.title;
+    if($("workNote")) $("workNote").textContent = w.desc || "";
     if($("workNum")) $("workNum").textContent = String(i+1).padStart(2,"0") + " / " + String(WORKS.length).padStart(2,"0");
     if($("workYear")) $("workYear").textContent = "YEAR: " + w.year;
     if($("workDims")) $("workDims").textContent = w.dims;
-    if($("workOrder")) $("workOrder").href = `shop.html?want=${encodeURIComponent(w.title)}#order`;
     const m = $("workModal");
     m.classList.remove("closing"); m.classList.add("open"); m.setAttribute("aria-hidden","false");
     lockScroll(true);
@@ -342,6 +342,16 @@ const WORKS = [
   }
   if($("workPrev")) $("workPrev").addEventListener("click", ()=>stepWork(-1));
   if($("workNext")) $("workNext").addEventListener("click", ()=>stepWork(1));
+  // lightbox swipe — horizontal drag steps works, vertical scroll untouched
+  (function(){
+    const box = document.querySelector("#workModal .pv"); if(!box) return;
+    let sx = 0, sy = 0;
+    box.addEventListener("touchstart", e=>{ const t = e.touches[0]; sx = t.clientX; sy = t.clientY; }, {passive:true});
+    box.addEventListener("touchend", e=>{
+      const t = e.changedTouches[0]; const dx = t.clientX - sx, dy = t.clientY - sy;
+      if(Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.5) stepWork(dx < 0 ? 1 : -1);
+    }, {passive:true});
+  })();
   function closeWork(){
     const m = $("workModal"); if(!m || !m.classList.contains("open")) return;
     const pvBox = m.querySelector(".pv"); if(pvBox) pvBox.classList.remove("go");
@@ -353,9 +363,6 @@ const WORKS = [
   document.addEventListener("click", e=>{
     const card = e.target.closest("[data-work]");
     if(card && ($("workGrid") || $("workList"))){ openWork(+card.dataset.work); return; }
-  });
-  if($("workOrder")) $("workOrder").addEventListener("click", e=>{
-    if(!SHOP_ENABLED){ e.preventDefault(); toast("Shop opening soon"); }
   });
   if($("workClose")) $("workClose").addEventListener("click", closeWork);
   if($("workModal")) $("workModal").addEventListener("click", e=>{ if(e.target.id === "workModal") closeWork(); });
@@ -529,7 +536,7 @@ const grid = $("worksGrid");
 if(grid) grid.innerHTML = POSTERS.map((p,i)=>`
   <div class="work rv" data-cursor="${String(i+1).padStart(2,"0")} — ${p.title}"><span class="work-index">${String(i+1).padStart(2,"0")}</span><div class="work-art" style="background:${p.bg}">${p.id}</div>
   <div class="work-meta"><div><h4>${p.title}</h4><p>${p.desc}</p></div>
-  <a class="enq" href="shop.html?want=${encodeURIComponent(p.title)}#order">Buy →</a></div></div>`).join("");
+  <a class="enq" href="index.html#contact">Buy →</a></div></div>`).join("");
 // signature cursor label — quietly names the hovered project (rAF-throttled)
 (function(){
   const label = $("cursorLabel"); if(!label) return;
@@ -615,7 +622,7 @@ if($("startProjectBtn")) $("startProjectBtn").addEventListener("click", e=>{
 
 // reveal on scroll — every section fades in (guarded; re-runnable for dynamic grids)
 function revealScan(){
-  const els = [...document.querySelectorAll("section.sec, .term, .product, .price-card, .feat-sign, .tilted figure, .formbox, .wcard, .wrow")].filter(el=>!el.classList.contains("rv")&&!el.dataset.rvDone);
+  const els = [...document.querySelectorAll("section.sec, .term, .feat-sign, .tilted figure, .formbox, .wcard, .wrow")].filter(el=>!el.classList.contains("rv")&&!el.dataset.rvDone);
   if(!("IntersectionObserver" in window)){ els.forEach(el=>el.classList.add("in")); return; }
   els.forEach(el=>{ el.classList.add("rv"); el.dataset.rvDone = "1"; });
   const io = new IntersectionObserver(entries=>{
@@ -664,217 +671,6 @@ if(hf) hf.addEventListener("submit", async e=>{
   const ok = await sendBooking(data, $("helloStatus"), mailto);
   if(btn){ btn.disabled = false; btn.textContent = "Send Message →"; }
   if(ok && SITE.web3formsKey) hf.reset();
-});
-
-// shop page logic (guarded)
-// ============================================================
-// ★ EDIT SHOP PRODUCTS HERE — copy the template line, fill in details.
-// Fields: id (unique), title, cat, price, old (sale price or null),
-// rating, reviews, badge (or null), year, img, bg (flat color).
-// shopifyVariantId/shopifyHandle: leave null until Shopify is connected.
-// ============================================================
-// TEMPLATE:
-// { id:"p9", title:"My Poster", cat:"grunge", price:49, old:null, rating:5.0, reviews:10, badge:"NEW", year:"2026", img:"images/my-poster.jpg", fb:"", bg:"#181818", desc:"One line.", specs:["A3 print-ready","Digital files"], shopifyVariantId:null, shopifyHandle:"my-poster" },
-const PRODUCTS = [
-  { id:"p1", title:"Persona Gold", cat:"grunge", price:49, old:69, rating:4.9, reviews:128, badge:"BESTSELLER", year:"2025", dims:"3600 × 4500 PX", img:"images/feat-1.l.jpg", fb:"https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=800&auto=format&fit=crop", bg:"#2A2118", desc:"Gold-foil grunge anime poster. Hand-built type + grain, printed on 250gsm matte.", specs:["A3 / A2 print-ready","250gsm matte + digital files","Limited run of 100","Ships in 3–5 days"], shopifyVariantId:null, shopifyHandle:"persona-gold" },
-  { id:"p2", title:"Egress", cat:"type", price:39, old:55, rating:4.8, reviews:96, badge:"NEW", year:"2025", dims:"3600 × 4500 PX", img:"images/feat-2.l.jpg", fb:"https://images.unsplash.com/photo-1512496015851-a90fb38ba796?q=80&w=800&auto=format&fit=crop", bg:"#24241F", desc:"Pale collage poster. Soft paper texture, minimal type system.", specs:["A3 / A2 print-ready","200gsm silk + digital","Open edition","Ships in 3–5 days"], shopifyVariantId:null, shopifyHandle:"egress" },
-  { id:"p3", title:"Noise Zine", cat:"grunge", price:45, old:null, rating:4.9, reviews:74, badge:"LOW STOCK", year:"2025", bg:"#181818", desc:"Raw xerox-style zine poster. Loud headers, dirty borders.", specs:["A3 + social kit","Digital + print PDF","Only 12 left","Ships in 48h"], shopifyVariantId:null, shopifyHandle:"noise-zine" },
-  { id:"p4", title:"Bloom Fest", cat:"gig", price:35, old:45, rating:4.7, reviews:61, badge:null, year:"2025", bg:"#24241F", desc:"Festival poster with textured bloom type. High contrast for walls.", specs:["A3 / A2","Digital included","Open edition","Ships in 3–5 days"], shopifyVariantId:null, shopifyHandle:"bloom-fest" },
-  { id:"p5", title:"Fern & Co", cat:"brand", price:59, old:null, rating:5.0, reviews:42, badge:"LIMITED", year:"2024", bg:"#181818", desc:"Brand poster pack — logo lockup + poster + mini guideline.", specs:["Logo + poster set","Vector + print PDF","Commercial license","1–2 weeks custom"], shopifyVariantId:null, shopifyHandle:"fern-co" },
-  { id:"p6", title:"Retro Arcade", cat:"gig", price:29, old:39, rating:4.6, reviews:88, badge:"SALE", year:"2024", bg:"#181818", desc:"Neon arcade poster. Perfect for rooms / studios.", specs:["A3 print-ready","Digital files","Open edition","Ships in 3–5 days"], shopifyVariantId:null, shopifyHandle:"retro-arcade" },
-  { id:"p7", title:"Sunset Records", cat:"gig", price:32, old:null, rating:4.8, reviews:53, badge:null, year:"2024", bg:"#2A2118", desc:"Gig poster with sunset grain. Warm reds, bold grotesk.", specs:["A3 / A2","Digital included","Open edition","Ships in 3–5 days"], shopifyVariantId:null, shopifyHandle:"sunset-records" },
-  { id:"p8", title:"Grotesk Spec", cat:"type", price:42, old:52, rating:4.9, reviews:67, badge:"BESTSELLER", year:"2023", bg:"#181818", desc:"Type specimen poster. 12 weights, grid notes, print-sharp.", specs:["A2 type sheet","Print PDF + PNG","Designers favourite","Ships in 3–5 days"], shopifyVariantId:null, shopifyHandle:"grotesk-spec" },
-];
-// ---- SHOPIFY SUPPORT (demo mode: fill SITE.shopify.domain to go live) ----
-function shopifyCfg(){
-  try {
-    const saved = JSON.parse(localStorage.getItem("strv1z_shopify")||"{}");
-    return { domain:(saved.domain||SITE.shopify.domain||"").replace(/^https?:\/\//,"").replace(/\/$/,""), token:saved.token||SITE.shopify.storefrontToken||"" };
-  } catch(e){ return { domain:SITE.shopify.domain||"", token:SITE.shopify.storefrontToken||"" }; }
-}
-function shopifyEnabled(){ return !!shopifyCfg().domain; }
-function shopifyProductUrl(p){ const c=shopifyCfg(); if(!c.domain||!p.shopifyHandle) return null; return `https://${c.domain}/products/${p.shopifyHandle}`; }
-function shopifyCartUrl(){
-  const c=shopifyCfg(); if(!c.domain||!cart.length) return null;
-  const parts=[];
-  for(const line of cart){
-    const p=PRODUCTS.find(x=>x.id===line.id); if(!p||!p.shopifyVariantId) return null;
-    parts.push(`${p.shopifyVariantId}:${line.qty}`);
-  }
-  if(!parts.length) return null;
-  return `https://${c.domain}/cart/${parts.join(",")}`;
-}
-async function shopifyCheckout(){
-  const url=shopifyCartUrl();
-  if(url){ location.href=url; return; }
-  // No variant IDs yet -> fall back to single-handle or store frontpage, keep cart text for manual order
-  const c=shopifyCfg();
-  if(c.domain){ location.href=`https://${c.domain}/cart`; return; }
-  toast("Add your Shopify domain first ↓");
-  smoothTo("#shopify");
-}
-async function shopifyFetchProducts(){
-  const c=shopifyCfg(); if(!c.domain||!c.token) return null;
-  const q=`{ products(first:20, query:"product_type:Poster") { edges { node { title handle variants(first:5){ edges{ node{ id price { amount } } } } } } } }`;
-  try{
-    const r=await fetch(`https://${c.domain}/api/2024-01/graphql.json`,{method:"POST",headers:{"Content-Type":"application/json","X-Shopify-Storefront-Access-Token":c.token},body:JSON.stringify({query:q})});
-    if(!r.ok) return null; return await r.json();
-  }catch(e){ return null; }
-}
-function refreshShopifyUI(){
-  const on=shopifyEnabled();
-  document.querySelectorAll("[data-shopify-only]").forEach(el=>{ el.style.display=on?"":"none"; });
-  const badge=$("shopifyStatus"); if(badge) badge.textContent=on?`● CONNECTED: ${shopifyCfg().domain}`:"○ DEMO MODE — local cart only";
-  const d=$("shopifyDomain"), t=$("shopifyToken");
-  if(d&&!d.value) d.value=shopifyCfg().domain||"";
-  if(t&&!t.value) t.value=shopifyCfg().token||"";
-}
-let activeCat = "all";
-function money(n){ return "$"+n; }
-function stars(r){ const f=Math.round(r); return "★".repeat(f)+"☆".repeat(5-f); }
-
-// cart state
-let cart = [];
-try { cart = JSON.parse(localStorage.getItem("strv1z_cart")||"[]"); } catch(e){ cart=[]; }
-if(!Array.isArray(cart)) cart = [];
-function saveCart(){ try{ localStorage.setItem("strv1z_cart", JSON.stringify(cart)); }catch(e){} }
-function cartQty(){ return cart.reduce((s,c)=>s+c.qty,0); }
-function cartSum(){ return cart.reduce((s,c)=>{ const p=PRODUCTS.find(x=>x.id===c.id); if(!p) return s; const extra=c.sizeExtra||0; return s+(p.price+extra)*c.qty; },0); }
-function toast(msg){ const t=$("toast"); if(!t) return; t.textContent=msg; t.classList.add("show"); clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove("show"),1800); }
-function updateCartUI(){
-  const qty = cartQty();
-  const btn = $("cartBtn");
-  if(btn) btn.style.display = (!SHOP_ENABLED || qty === 0) ? "none" : "";
-  if($("cartCount")) $("cartCount").textContent = qty;
-  if($("cartCount2")) $("cartCount2").textContent = qty;
-  if($("cartTotal")) $("cartTotal").textContent = money(cartSum());
-  const box=$("cartItems"); if(!box) return;
-  if(!cart.length){ box.innerHTML = `<p class="mono muted" style="font-size:12px;text-align:center;margin-top:40px">Cart is empty.<br/>Tap INFO on a poster to see details.</p>`; return; }
-  box.innerHTML = cart.map(c=>{
-    const p=PRODUCTS.find(x=>x.id===c.id); if(!p) return "";
-    const thumb = p.img ? `<img src="${p.img}" onerror="this.remove()" alt="">` : "";
-    return `<div class="cart-item"><div class="cart-thumb" style="background:${p.bg}">${thumb}${p.img?"":p.title.slice(0,2)}</div>
-    <div style="flex:1"><h5>${p.title}</h5><p class="mono muted" style="font-size:11px;margin:4px 0">${c.sizeLabel||"A3"} • ${money(p.price+(c.sizeExtra||0))}</p>
-    <div class="cart-qty"><button data-dec="${c.key}">−</button><span class="mono">${c.qty}</span><button data-inc="${c.key}">+</button><button data-rem="${c.key}" style="width:auto;padding:0 8px;font-size:11px">remove</button></div></div></div>`;
-  }).join("");
-}
-function addToCart(id, qty=1, sizeLabel="A3", sizeExtra=0){
-  if(!SHOP_ENABLED){ toast("Shop opening soon"); return; }
-  const key = id+"|"+sizeLabel;
-  const ex = cart.find(c=>c.key===key);
-  if(ex) ex.qty = Math.min(10, ex.qty+qty); else cart.push({key,id,qty,sizeLabel,sizeExtra});
-  saveCart(); updateCartUI(); toast("Added to cart ✓"); openCart();
-}
-function openCart(){
-  if(!SHOP_ENABLED) return;
-  if($("cartDrawer")){ $("cartDrawer").classList.add("open"); $("cartBackdrop").classList.add("open"); }
-  clearTimeout(openCart._t);
-  openCart._t = setTimeout(closeCart, 5000);
-}
-function closeCart(){
-  clearTimeout(openCart._t);
-  if($("cartDrawer")){ $("cartDrawer").classList.remove("open"); $("cartBackdrop").classList.remove("open"); }
-}
-
-// shop grid
-function renderShop(){
-  const g=$("shopGrid"); if(!g) return;
-  const q=(($("shopSearch")||{}).value||"").toLowerCase();
-  const sort=(($("shopSort")||{}).value||"feat");
-  let list=PRODUCTS.filter(p=>(activeCat==="all"||p.cat===activeCat)&&(p.title.toLowerCase().includes(q)||p.desc.toLowerCase().includes(q)));
-  if(sort==="low") list=[...list].sort((a,b)=>a.price-b.price);
-  if(sort==="high") list=[...list].sort((a,b)=>b.price-a.price);
-  if(sort==="rating") list=[...list].sort((a,b)=>b.rating-a.rating);
-  g.innerHTML=list.map(p=>{
-    const art = p.img ? `<img src="${p.img}" onerror="this.onerror=null;this.src='${p.fb||""}'" alt="${p.title}" loading="lazy">` : p.title.slice(0,4);
-    const sUrl = shopifyProductUrl(p);
-    return `<div class="product">
-      <div class="product-art" data-info="${p.id}" style="background:${p.bg}">${p.badge?`<span class="product-badge${p.badge==="SALE"||p.badge==="LOW STOCK"?" red":""}">${p.badge}</span>`:""}${art}</div>
-      <div class="product-body"><div><h4>${p.title}</h4><p class="product-cat">${p.cat.toUpperCase()} / ${p.year}</p></div>
-      <div class="stars">${stars(p.rating)} <span class="mono muted" style="font-size:11px">${p.rating} (${p.reviews})</span></div>
-      <div class="product-row"><span class="product-price">Quoted per project</span><span class="mono muted" style="font-size:11px">IN STOCK ✓</span></div>
-      <div class="product-actions"><button class="btn-info" data-info="${p.id}">INFO ⓘ</button><button class="btn-buy" data-buy="${p.id}">ADD TO CART</button></div>
-      ${sUrl?`<a class="mono muted" style="font-size:11px;text-align:center" href="${sUrl}" target="_blank" rel="noopener">View on Shopify ↗</a>`:`<span class="mono muted" style="font-size:11px;text-align:center;opacity:.6">Shopify: add variant ID to enable direct checkout</span>`}
-      </div></div>`;
-  }).join("") || `<p class="mono muted">No posters found. Try another search.</p>`;
-  if(typeof revealScan === "function") revealScan();
-}
-
-// info modal
-let currentInfo=null;
-function openInfo(id){
-  const p=PRODUCTS.find(x=>x.id===id); if(!p) return; currentInfo=p;
-  if($("infoMedia")){ $("infoMedia").style.background=p.bg; $("infoMedia").innerHTML=(p.img?`<img src="${p.img}" onerror="this.onerror=null;this.src='${p.fb||""}'" alt="">`:"")+`<span style="position:relative;z-index:1">${p.img?"":p.title}</span>`; }
-  if($("infoCat")) $("infoCat").textContent=`${p.cat.toUpperCase()} / ${p.year} • ${p.reviews} REVIEWS`;
-  if($("infoTitle")) $("infoTitle").textContent=p.title;
-  if($("infoStars")) $("infoStars").innerHTML=`${stars(p.rating)} <span class="mono muted">${p.rating} (${p.reviews})</span>`;
-  if($("infoPrice")) $("infoPrice").textContent="Quoted per project";
-  if($("infoOld")) $("infoOld").textContent=p.old?money(p.old):"";
-  if($("infoBadge")){ $("infoBadge").textContent=p.badge||"ORIGINAL"; $("infoBadge").style.display=p.badge?"":"none"; }
-  if($("infoDesc")) $("infoDesc").textContent=p.desc;
-  if($("infoSpecs")) $("infoSpecs").innerHTML=p.specs.map(s=>`<li>${s}</li>`).join("");
-  if($("infoQty")) $("infoQty").value=1;
-  const im = $("infoModal");
-  im.classList.add("open"); im.setAttribute("aria-hidden","false");
-  lockScroll(true);
-  const x = $("infoClose"); if(x) requestAnimationFrame(()=>{ try{ x.focus({preventScroll:true}); }catch(e){} });
-}
-function closeInfo(){
-  const im = $("infoModal"); if(!im) return;
-  if(!im.classList.contains("open")) return;
-  im.classList.remove("open"); im.setAttribute("aria-hidden","true");
-  lockScroll(false);
-}
-
-document.addEventListener("click", e=>{
-  const inf=e.target.closest("[data-info]"); if(inf){ openInfo(inf.dataset.info); return; }
-  const buy=e.target.closest("[data-buy]"); if(buy){ const p=PRODUCTS.find(x=>x.id===buy.dataset.buy); if(p) addToCart(p.id,1,"A3",0); return; }
-  const chip=e.target.closest("#shopFilters .chip"); if(chip){ document.querySelectorAll("#shopFilters .chip").forEach(c=>c.classList.remove("active")); chip.classList.add("active"); activeCat=chip.dataset.cat; renderShop(); return; }
-  const dec=e.target.closest("[data-dec]"); if(dec){ const it=cart.find(c=>c.key===dec.dataset.dec); if(it){ it.qty--; if(it.qty<=0) cart=cart.filter(c=>c.key!==it.key); saveCart(); updateCartUI(); } return; }
-  const inc=e.target.closest("[data-inc]"); if(inc){ const it=cart.find(c=>c.key===inc.dataset.inc); if(it){ it.qty=Math.min(10,it.qty+1); saveCart(); updateCartUI(); } return; }
-  const rem=e.target.closest("[data-rem]"); if(rem){ cart=cart.filter(c=>c.key!==rem.dataset.rem); saveCart(); updateCartUI(); return; }
-});
-if($("shopSearch")) $("shopSearch").addEventListener("input", renderShop);
-if($("shopSort")) $("shopSort").addEventListener("change", renderShop);
-if($("infoClose")) $("infoClose").addEventListener("click", closeInfo);
-if($("infoModal")) $("infoModal").addEventListener("click", e=>{ if(e.target.id==="infoModal") closeInfo(); });
-document.addEventListener("keydown", e=>{ if(e.key==="Escape"){ closeInfo(); closeCart(); } });
-if($("cartBtn")) $("cartBtn").addEventListener("click", openCart);
-if($("cartDrawer")) $("cartDrawer").addEventListener("pointermove", ()=>{
-  if(!$("cartDrawer").classList.contains("open")) return;
-  clearTimeout(openCart._t);
-  openCart._t = setTimeout(closeCart, 5000);
-}, {passive:true});
-if($("cartClose")) $("cartClose").addEventListener("click", closeCart);
-if($("cartBackdrop")) $("cartBackdrop").addEventListener("click", closeCart);
-if($("continueBtn")) $("continueBtn").addEventListener("click", closeCart);
-if($("infoAdd")) $("infoAdd").addEventListener("click", ()=>{ if(!currentInfo) return; const q=Math.max(1,+$("infoQty").value||1); const sel=$("infoSize"); const label=sel?sel.options[sel.selectedIndex].text.split(" (")[0]:"A3"; const extra=sel?+sel.value:0; addToCart(currentInfo.id,q,label,extra); });
-if($("infoBuy")) $("infoBuy").addEventListener("click", ()=>{ if(!currentInfo) return; const q=Math.max(1,+$("infoQty").value||1); const sel=$("infoSize"); const label=sel?sel.options[sel.selectedIndex].text.split(" (")[0]:"A3"; const extra=sel?+sel.value:0; addToCart(currentInfo.id,q,label,extra); closeInfo(); setTimeout(()=>smoothTo("#order"),300); if($("orderPackage")) $("orderPackage").value="Cart checkout"; const ta=document.querySelector('#orderForm textarea'); if(ta) ta.value=`Cart: ${currentInfo.title} x${q} (${label}) — $${(currentInfo.price+extra)*q}. Name/address: ...`; });
-if($("checkoutBtn")) $("checkoutBtn").addEventListener("click", ()=>{ closeCart(); const o=document.getElementById("order"); if(o){ smoothTo(o); if($("orderPackage")) $("orderPackage").value="Cart checkout"; const ta=document.querySelector('#orderForm textarea'); if(ta&&cart.length){ ta.value="CART:\n"+cart.map(c=>{ const p=PRODUCTS.find(x=>x.id===c.id); return `• ${p.title} (${c.sizeLabel}) x${c.qty} — $${(p.price+c.sizeExtra)*c.qty}`; }).join("\n")+`\nTotal: $${cartSum()}\n\nName/address: ...`; } } else { location.href="shop.html#order"; } });
-if($("shopifyCheckoutBtn")) $("shopifyCheckoutBtn").addEventListener("click", shopifyCheckout);
-if($("shopifyBuyBtn")) $("shopifyBuyBtn").addEventListener("click", ()=>{ if(!currentInfo) return; const u=shopifyProductUrl(currentInfo); if(u) window.open(u,"_blank"); else toast("Set Shopify domain + handle first"); });
-if($("shopifySave")) $("shopifySave").addEventListener("click", ()=>{ const d=($("shopifyDomain").value||"").trim(), t=($("shopifyToken").value||"").trim(); localStorage.setItem("strv1z_shopify", JSON.stringify({domain:d,token:t})); refreshShopifyUI(); renderShop(); toast(d?"Shopify connected ✓":"Shopify cleared"); });
-if($("shopifyTest")) $("shopifyTest").addEventListener("click", async ()=>{ toast("Testing Shopify…"); const r=await shopifyFetchProducts(); toast(r?"Shopify API OK ✓":"API failed — check domain/token"); if(r) console.log(r); });
-renderShop(); updateCartUI(); refreshShopifyUI();
-
-if($("orderPackage")){
-  const w=new URLSearchParams(location.search).get("want");
-  if(w){ const ta=document.querySelector('#orderForm textarea'); if(ta) ta.value=`Hi! I saw "${w}" in your works. I'd like something similar. My idea: ...`; }
-}
-document.addEventListener("click", e=>{
-  const b=e.target.closest("[data-order]");
-  if(b&&$("orderPackage")){ $("orderPackage").value=b.dataset.order; smoothTo("#order"); }
-});
-if($("orderForm")) $("orderForm").addEventListener("submit", async e=>{
-  e.preventDefault(); const fd=new FormData(e.target);
-  const txt=`Name: ${fd.get("name")}\nEmail: ${fd.get("email")}\nPackage: ${fd.get("package")}\nBrief:\n${fd.get("brief")}`;
-  $("orderSummary").textContent="✓ READY:\n"+txt;
-  const btn = e.target.querySelector('[type="submit"]');
-  const data = { subject:`Order — ${fd.get("package")}`, name:fd.get("name"), email:fd.get("email"), package:fd.get("package"), brief:fd.get("brief") };
-  const mailto=`mailto:${SITE.email}?subject=${encodeURIComponent("Order — "+fd.get("package"))}&body=${encodeURIComponent(txt)}`;
-  if(btn){ btn.disabled = true; btn.textContent = "Sending…"; }
-  await sendBooking(data, $("orderStatus"), mailto);
-  if(btn){ btn.disabled = false; btn.textContent = "Send Order →"; }
 });
 
 // split-text mask reveal — staggered character entrance (Framer-style).
