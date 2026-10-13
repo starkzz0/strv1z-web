@@ -761,3 +761,18 @@ if(hf) hf.addEventListener("submit", async e=>{
   let tm = 0;
   addEventListener("resize", ()=>{ clearTimeout(tm); tm = setTimeout(fit, 200); });
 })();
+// floating contact pill - mobile only: hide on scroll down, return on scroll up
+(function(){
+  const pill = document.querySelector(".contact-pill"); if(!pill) return;
+  const mq = matchMedia("(max-width: 640px)");
+  let last = scrollY, ticking = false;
+  function onScroll(){
+    ticking = false;
+    if(!mq.matches){ pill.classList.remove("hide"); last = scrollY; return; }
+    const y = scrollY;
+    if(y > 140 && y > last + 4) pill.classList.add("hide");
+    else if(y < last - 4 || y <= 140) pill.classList.remove("hide");
+    last = y;
+  }
+  addEventListener("scroll", ()=>{ if(!ticking){ ticking = true; requestAnimationFrame(onScroll); } }, {passive:true});
+})();
