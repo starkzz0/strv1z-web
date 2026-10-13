@@ -511,9 +511,6 @@ html.js .rv-scale.in{opacity:1;transform:none}
   .lereve-hero{grid-template-columns:1fr;gap:20px}
   .about-wrap{grid-template-columns:1fr}
 }
-@media(max-width:430px){
-  .wgrid{grid-template-columns:1fr}
-}
 @media(max-width:860px){
   html,body{overflow-x:clip}
   .pillnav{display:none}
@@ -571,30 +568,55 @@ html.js .rv-scale.in{opacity:1;transform:none}
 .about-card > p:first-child,.page-lede{font-size:clamp(20px,1.6vw,24px);line-height:1.4}
 .faq .body .body-in,.term p:not(.mono),.term blockquote,.about-card > p:not(:first-child):not(.mono),.soft-note{font-size:clamp(18px,1.25vw,20px);line-height:1.65}
 .about-card p.mono,.formbox p.mono{font-family:var(--head);font-style:normal;font-weight:400;font-size:14px;letter-spacing:.08em}
-/* ---------- works folders: snap carousel on phones (desktop grid untouched) ---------- */
+/* ---------- works folders: contained fan carousel on phones (desktop grid untouched) ---------- */
 .work-index-bar,.cat-dots{display:none}
 @media(max-width:767px){
-  .cat-row{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding-left:20px;padding:8px 20px 20px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  :root{--nav-h:88px}
+  /* page head clears the fixed nav without dead space */
+  .hero.hero--bleed{padding-top:calc(var(--nav-h) + 24px);padding-bottom:20px;min-height:0}
+  .page-title{margin-bottom:14px}
+  .works-bar{margin-bottom:10px}
+  /* one column of rhythm: carousel → dots → heading → grid → CTA */
+  #formats{padding-top:24px;padding-bottom:0}
+  /* carousel viewport: same --ws gutter as the grid, clipped to its own box */
+  .cat-row{display:flex;gap:16px;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scroll-padding-left:0;padding:0;-webkit-overflow-scrolling:touch;scrollbar-width:none}
   .cat-row::-webkit-scrollbar{display:none}
-  .cat{flex:0 0 78%;max-width:320px;scroll-snap-align:start}
-  .cat-stack{padding-top:12px;overflow:visible}
-  .cat-layer{top:12px;height:82%;width:85%}
-  .cat-layer.b1{left:0;right:auto;transform:rotate(-6deg) translate(-4px,4px)}
-  .cat-layer.b2{left:auto;right:0;transform:rotate(5deg) translate(4px,6px)}
-  .cat-glass{position:static;height:auto;margin:-10px 0 0;background:var(--surface);-webkit-backdrop-filter:none;backdrop-filter:none;padding:14px 16px;min-height:44px}
-  .cat.open .cat-glass{border-color:var(--text)}
-  .cat-name{font-size:18px}
-  .cat-count{font-size:13px}
-  .cat-dots{display:flex;gap:8px;justify-content:center;padding:2px 0 0}
-  .cat-dots button{width:6px;height:6px;padding:0;border:0;border-radius:50%;background:var(--border);cursor:pointer}
-  .cat-dots button.on{background:var(--text)}
+  .cat{flex:0 0 76%;max-width:300px;display:block;scroll-snap-align:start}
+  /* fan of two angled cards, clipped to the tile so nothing bleeds sideways */
+  .cat-stack{position:relative;display:block;aspect-ratio:4/3;overflow:hidden;border-radius:14px}
+  .cat-layer{top:10%;height:80%;width:82%;left:9%;right:9%}
+  .cat-layer.b1{left:4%;right:auto;transform:rotate(-7deg)}
+  .cat-layer.b2{left:auto;right:4%;transform:rotate(6deg)}
+  .cat:hover .b1,.cat.open .b1{transform:rotate(-7deg)}
+  .cat:hover .b2,.cat.open .b2{transform:rotate(6deg)}
+  /* label bar pinned to the tile base, on top of the artwork */
+  .cat-glass{position:absolute;left:0;right:0;bottom:0;top:auto;height:auto;margin:0;background:var(--surface);-webkit-backdrop-filter:none;backdrop-filter:none;border:0;border-top:1px solid var(--border);border-radius:0;padding:12px 14px;min-height:48px}
+  .cat:hover .cat-glass,.cat.open .cat-glass{transform:none}
+  .cat-name{font-size:15px}
+  .cat-count{font-size:12px}
+  .cat-dots{display:flex;gap:0;justify-content:center;padding:6px 0 0}
+  .cat-dots button{width:44px;height:44px;padding:0;border:0;background:none;cursor:pointer;display:grid;place-items:center}
+  .cat-dots button::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--border);transition:background .2s ease}
+  .cat-dots button.on::before{background:var(--text)}
+  /* index bar + grid */
   .work-index-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 12px}
   #formatLabel{font-size:12px}
-  #showAll{background:none;border:0;cursor:pointer;font-size:12px;color:var(--muted)}
+  #showAll{background:none;border:0;cursor:pointer;font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-decoration:underline;text-underline-offset:3px;padding:12px 2px;min-height:44px}
   #showAll:hover{color:var(--text)}
-  #workIndex{scroll-margin-top:16px}
+  #workIndex{scroll-margin-top:96px;padding-top:28px}
+  .wgrid{gap:12px}
+  .wcard-media{border-radius:14px;overflow:hidden}
+  .soft-note{margin-top:32px}
   #workGrid{transition:opacity .2s ease}
   #workGrid.fading{opacity:0}
+  /* floating pill: solid so it never reads as grey haze over artwork */
+  .contact-pill{background:var(--surface);-webkit-backdrop-filter:none;backdrop-filter:none;text-shadow:none;min-height:48px}
+  body:has(#workModal.open) .contact-pill{display:none}
+  #workIndex ~ footer{padding-bottom:104px}
+}
+@media(max-width:360px){
+  .lereve-nav{gap:10px;padding:8px 8px 8px 14px}
+  .lereve-links a{padding:9px 9px}
 }
 @media(prefers-reduced-motion:reduce){
   .cat-row{scroll-behavior:auto}
