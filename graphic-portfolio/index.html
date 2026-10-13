@@ -25,7 +25,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600;800;900&family=Inter+Tight:wght@700;800&family=Space+Mono:wght@400;700&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
 
 <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20width='64'%20height='64'%20rx='14'%20fill='%230F0F0F'/%3E%3Ctext%20x='32'%20y='45'%20font-family='Georgia,serif'%20font-style='italic'%20font-size='36'%20text-anchor='middle'%20fill='%23EDEDED'%3ES%3C/text%3E%3C/svg%3E" />
-<link rel="stylesheet" href="styles.css?v=94" />
+<link rel="stylesheet" href="styles.css?v=95" />
 </head>
 <body>
 <div class="loader" id="loader" aria-hidden="true">
@@ -94,6 +94,16 @@
 </section>
 
 <div class="sheet">
+  <div class="sys"><span>02 // SERVICES</span></div>
+  <section class="sec" id="services">
+    <span class="kicker">Services</span>
+    <div class="wrow svc-row"><span class="cats"><span>Custom art prints</span><span>Gig posters</span></span><h3>Posters</h3><span class="yr">3–5 days</span><span class="n">01</span></div>
+    <div class="wrow svc-row"><span class="cats"><span>Headers</span><span>Covers</span><span>Social kits</span></span><h3>Banners</h3><span class="yr">2–4 days</span><span class="n">02</span></div>
+    <div class="wrow svc-row"><span class="cats"><span>Pages</span><span>Zines</span><span>Type systems</span></span><h3>Layouts</h3><span class="yr">1–2 weeks</span><span class="n">03</span></div>
+    <div class="wrow svc-row"><span class="cats"><span>Covers</span><span>Packaging</span></span><h3>Album Artwork</h3><span class="yr">1–2 weeks</span><span class="n">04</span></div>
+    <p class="mono muted" style="font-size:11px;margin-top:16px">Booking: two slots at a time — async, email-first. <a href="#contact">Start a project →</a></p>
+  </section>
+
   <div class="sys"><span>03 // ABOUT</span></div>
   <section class="sec" id="about">
     <span class="kicker">About</span>
@@ -123,16 +133,20 @@
       <form id="helloForm">
         <label>Name</label><input required name="name" placeholder="Your Name" />
         <label>Email Address</label><input required type="email" name="email" placeholder="your@email.com" />
+        <label>Project Type</label><select name="ptype"><option>Poster</option><option>Banner</option><option>Layout</option><option>Album Artwork</option><option>Other</option></select>
+        <label>Budget Range</label><select name="budget"><option>Under $50</option><option selected>$50 - $150</option><option>$150 - $300</option><option>$300+</option></select>
+        <label>Deadline</label><input type="date" name="deadline" />
         <label>Project Details</label><textarea required name="msg" rows="5" placeholder="Tell us about your project, timeline..."></textarea>
+        <p class="mono muted" id="helloStatus" style="font-size:11px;margin-top:12px" role="status"></p>
         <button class="btn-white mono" type="submit">Send Message →</button>
       </form>
-      <p class="mono muted" style="font-size:11px;margin-top:12px">For costs, go to <a href="shop.html" style="color:var(--accent)">shop →</a> (ready posters + custom).</p>
+      <p class="mono muted" style="font-size:11px;margin-top:12px">For costs, go to <a href="shop.html" style="color:var(--text)">shop →</a> (ready posters + custom).</p>
     </div>
     </div>
   </section>
 
   <footer>
-    <div><strong>STRV1Z</strong><p>© 2026 // <a href="terms.html" style="color:var(--accent)">TERMS</a></p></div>
+    <div><strong>STRV1Z</strong><p>© 2026 // <a href="terms.html" style="color:var(--text)">TERMS</a></p></div>
     <div style="display:flex;gap:24px"><a href="#">INSTAGRAM ↗</a><a href="#">BEHANCE ↗</a><a href="terms.html">TERMS ↗</a></div>
   </footer>
 </div>
@@ -140,7 +154,7 @@
 <div class="toast mono" id="toast">Added to cart ✓</div>
 <div class="cursor-label" id="cursorLabel" aria-hidden="true"></div>
 
-<script src="script.js?v=50"></script>
+<script src="script.js?v=51"></script>
 
 </body>
 </html>

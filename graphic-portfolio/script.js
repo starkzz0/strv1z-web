@@ -12,6 +12,7 @@ const SHOP_ENABLED = false;
 // NOTHING below needs editing except the marked ★ arrays + SITE above.
 // ============================================================
 const SITE = { name:"strv1z", giant:"STRV1Z", city:"YOUR CITY", email:"hello@example.com",
+  web3formsKey:"", // ★ paste your access key from web3forms.com (free, no account) to make forms deliver; empty = mailto fallback
   shopify: { domain:"", storefrontToken:"", collectionHandle:"posters" }
 };
 const POSTERS = [
@@ -23,12 +24,12 @@ const POSTERS = [
   { id:"TYPE", title:"Grotesk Spec", desc:"TYPE POSTER / 2023", bg:"#181818" },
 ];
 const FAQS = [
-  ["What services do you provide?","Posters, logos, brand kits, social packs, typography and art direction."],
-  ["What is your typical timeline?","Posters 3–5 days, branding 1–2 weeks. Express 48h available."],
-  ["What are your charges?",'Fixed packages from $45 + ready posters from $29 — <a href="shop.html">see shop →</a>'],
-  ["How do we start?","Send a message via contact or <a href='shop.html#order'>shop order form →</a>. I confirm price + date within 24h, 50% upfront."],
-  ["How many revisions?","2 on Starter, 3 on Pro/Brand. Extra revision +$10."],
-  ["Do you use AI?","No. All type and texture work is hand-built."],
+  ["What services do you provide?","Custom posters, banners, page layouts and album artwork — from concept to print-ready files. See <a href='#services'>Services</a> for current offerings."],
+  ["What is your typical turnaround?","Posters 3–5 days, banners 2–4 days, layouts and artwork 1–2 weeks. Rush 48h available on request."],
+  ["How does pricing work?","Every project is quoted individually based on scope, usage and turnaround — no fixed price list. Write via the <a href='#contact'>booking form</a> and I confirm your quote within 24 hours."],
+  ["How do we start?","Send the booking form with your idea, or email me directly. I confirm scope, date and quote within 24h; work begins after a 50% upfront deposit. Two commission slots at a time."],
+  ["How many revisions are included?","Two revision rounds on the approved concept are included. Further revisions or direction changes are charged at my standard hourly rate."],
+  ["What files and rights do I get?","Print-ready PDF, web PNG and source files on request. Your commission includes commercial use for the agreed purpose — full terms live on the <a href='terms.html'>Terms page</a>."],
 ];
 const $ = id => document.getElementById(id);
 // entrance fade plays once per session — later page views paint instantly
@@ -334,6 +335,13 @@ const WORKS = [
     if(media){ media.onerror = function(){ this.onerror=null; this.src=it.fb||w.fb||it.img; }; media.src = it.img; }
     document.querySelectorAll("#workVariants button").forEach(x=>x.classList.toggle("on", x === b));
   });
+  // lightbox stepping — cycle the archive with wrap-around
+  function stepWork(d){
+    if(!WORKS.length) return;
+    openWork(openWorkIdx = (openWorkIdx + d + WORKS.length) % WORKS.length);
+  }
+  if($("workPrev")) $("workPrev").addEventListener("click", ()=>stepWork(-1));
+  if($("workNext")) $("workNext").addEventListener("click", ()=>stepWork(1));
   function closeWork(){
     const m = $("workModal"); if(!m || !m.classList.contains("open")) return;
     const pvBox = m.querySelector(".pv"); if(pvBox) pvBox.classList.remove("go");
@@ -351,7 +359,7 @@ const WORKS = [
   });
   if($("workClose")) $("workClose").addEventListener("click", closeWork);
   if($("workModal")) $("workModal").addEventListener("click", e=>{ if(e.target.id === "workModal") closeWork(); });
-  document.addEventListener("keydown", e=>{ if(e.key === "Escape") closeWork(); });
+  document.addEventListener("keydown", e=>{ if(e.key === "Escape") closeWork(); const m=$("workModal"); if(m && m.classList.contains("open")){ if(e.key === "ArrowLeft") stepWork(-1); if(e.key === "ArrowRight") stepWork(1); } });
   document.querySelectorAll(".works-toggle .chip").forEach(ch=>ch.addEventListener("click", ()=>{
     document.querySelectorAll(".works-toggle .chip").forEach(c=>{ c.classList.remove("active"); c.setAttribute("aria-selected","false"); });
     ch.classList.add("active"); ch.setAttribute("aria-selected","true");
@@ -631,13 +639,31 @@ function revealScan(){
 }
 revealScan();
 
+// booking delivery — Web3Forms when SITE.web3formsKey is set, mailto fallback.
+// Posts {access_key, subject, ...fields}; status element shows the outcome.
+async function sendBooking(data, statusEl, mailto){
+  const done = msg=>{ if(statusEl) statusEl.textContent = msg; return true; };
+  if(!SITE.web3formsKey){ location.href = mailto; return done("Opening your email app…"); }
+  try{
+    const r = await fetch("https://api.web3forms.com/submit", { method:"POST", headers:{ "Content-Type":"application/json" }, body:JSON.stringify(Object.assign({ access_key:SITE.web3formsKey }, data)) });
+    const j = await r.json().catch(()=>({}));
+    if(r.ok && j.success !== false) return done("✓ Message sent — I reply within 24 hours.");
+    return done("✕ Send failed — please use the email button instead.");
+  }catch(e){ return done("✕ Network error — please use the email button instead."); }
+}
+
 // hello form
 const hf = $("helloForm");
-if(hf) hf.addEventListener("submit", e=>{
+if(hf) hf.addEventListener("submit", async e=>{
   e.preventDefault();
   const fd = new FormData(hf);
-  const body = encodeURIComponent(`Name: ${fd.get("name")}\nEmail: ${fd.get("email")}\n\n${fd.get("msg")}`);
-  location.href = `mailto:${SITE.email}?subject=${encodeURIComponent("Project — "+fd.get("name"))}&body=${body}`;
+  const btn = hf.querySelector('[type="submit"]');
+  const data = { subject:`Booking — ${fd.get("name")} (${fd.get("ptype")})`, name:fd.get("name"), email:fd.get("email"), type:fd.get("ptype"), budget:fd.get("budget"), deadline:fd.get("deadline"), message:fd.get("msg") };
+  const mailto = `mailto:${SITE.email}?subject=${encodeURIComponent("Project — "+fd.get("name"))}&body=${encodeURIComponent(`Name: ${fd.get("name")}\nEmail: ${fd.get("email")}\nType: ${fd.get("ptype")}\nBudget: ${fd.get("budget")}\nDeadline: ${fd.get("deadline")}\n\n${fd.get("msg")}`)}`;
+  if(btn){ btn.disabled = true; btn.textContent = "Sending…"; }
+  const ok = await sendBooking(data, $("helloStatus"), mailto);
+  if(btn){ btn.disabled = false; btn.textContent = "Send Message →"; }
+  if(ok && SITE.web3formsKey) hf.reset();
 });
 
 // shop page logic (guarded)
@@ -766,7 +792,7 @@ function renderShop(){
       <div class="product-art" data-info="${p.id}" style="background:${p.bg}">${p.badge?`<span class="product-badge${p.badge==="SALE"||p.badge==="LOW STOCK"?" red":""}">${p.badge}</span>`:""}${art}</div>
       <div class="product-body"><div><h4>${p.title}</h4><p class="product-cat">${p.cat.toUpperCase()} / ${p.year}</p></div>
       <div class="stars">${stars(p.rating)} <span class="mono muted" style="font-size:11px">${p.rating} (${p.reviews})</span></div>
-      <div class="product-row"><span class="product-price">${money(p.price)}${p.old?`<s>${money(p.old)}</s>`:""}</span><span class="mono muted" style="font-size:11px">IN STOCK ✓</span></div>
+      <div class="product-row"><span class="product-price">Quoted per project</span><span class="mono muted" style="font-size:11px">IN STOCK ✓</span></div>
       <div class="product-actions"><button class="btn-info" data-info="${p.id}">INFO ⓘ</button><button class="btn-buy" data-buy="${p.id}">ADD TO CART</button></div>
       ${sUrl?`<a class="mono muted" style="font-size:11px;text-align:center" href="${sUrl}" target="_blank" rel="noopener">View on Shopify ↗</a>`:`<span class="mono muted" style="font-size:11px;text-align:center;opacity:.6">Shopify: add variant ID to enable direct checkout</span>`}
       </div></div>`;
@@ -782,7 +808,7 @@ function openInfo(id){
   if($("infoCat")) $("infoCat").textContent=`${p.cat.toUpperCase()} / ${p.year} • ${p.reviews} REVIEWS`;
   if($("infoTitle")) $("infoTitle").textContent=p.title;
   if($("infoStars")) $("infoStars").innerHTML=`${stars(p.rating)} <span class="mono muted">${p.rating} (${p.reviews})</span>`;
-  if($("infoPrice")) $("infoPrice").textContent=money(p.price);
+  if($("infoPrice")) $("infoPrice").textContent="Quoted per project";
   if($("infoOld")) $("infoOld").textContent=p.old?money(p.old):"";
   if($("infoBadge")){ $("infoBadge").textContent=p.badge||"ORIGINAL"; $("infoBadge").style.display=p.badge?"":"none"; }
   if($("infoDesc")) $("infoDesc").textContent=p.desc;
@@ -839,11 +865,16 @@ document.addEventListener("click", e=>{
   const b=e.target.closest("[data-order]");
   if(b&&$("orderPackage")){ $("orderPackage").value=b.dataset.order; smoothTo("#order"); }
 });
-if($("orderForm")) $("orderForm").addEventListener("submit",e=>{
+if($("orderForm")) $("orderForm").addEventListener("submit", async e=>{
   e.preventDefault(); const fd=new FormData(e.target);
   const txt=`Name: ${fd.get("name")}\nEmail: ${fd.get("email")}\nPackage: ${fd.get("package")}\nBrief:\n${fd.get("brief")}`;
   $("orderSummary").textContent="✓ READY:\n"+txt;
-  location.href=`mailto:${SITE.email}?subject=${encodeURIComponent("Order — "+fd.get("package"))}&body=${encodeURIComponent(txt)}`;
+  const btn = e.target.querySelector('[type="submit"]');
+  const data = { subject:`Order — ${fd.get("package")}`, name:fd.get("name"), email:fd.get("email"), package:fd.get("package"), brief:fd.get("brief") };
+  const mailto=`mailto:${SITE.email}?subject=${encodeURIComponent("Order — "+fd.get("package"))}&body=${encodeURIComponent(txt)}`;
+  if(btn){ btn.disabled = true; btn.textContent = "Sending…"; }
+  await sendBooking(data, $("orderStatus"), mailto);
+  if(btn){ btn.disabled = false; btn.textContent = "Send Order →"; }
 });
 
 // split-text mask reveal — staggered character entrance (Framer-style).

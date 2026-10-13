@@ -4,7 +4,7 @@
   STRUCTURE: header → page head → posters grid (#shopGrid) → custom packages → shopify connect → order form → footer → info modal + cart
   QUICK EDITS:
     - Products ............. script.js → PRODUCTS array (copy template line)
-    - Package prices ........ .price-card blocks below
+    - Services ............ order form below (every project quoted individually)
     - Contact email ........ search "hello@example.com"
 -->
 <html lang="en" class="dark">
@@ -21,7 +21,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600;800;900&family=Inter+Tight:wght@700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 
 <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20width='64'%20height='64'%20rx='14'%20fill='%230F0F0F'/%3E%3Ctext%20x='32'%20y='45'%20font-family='Georgia,serif'%20font-style='italic'%20font-size='36'%20text-anchor='middle'%20fill='%23EDEDED'%3ES%3C/text%3E%3C/svg%3E" />
-<link rel="stylesheet" href="styles.css?v=94" />
+<link rel="stylesheet" href="styles.css?v=95" />
 </head>
 <body>
 <script src="https://unpkg.com/lenis@1.3.26/dist/lenis.min.js"></script>
@@ -55,7 +55,7 @@
   <span class="page-kicker">02 / Shop</span>
   <h1 class="page-title">Shop</h1>
   <p class="page-lede">Original runs and small editions. Open one for details, add to cart, check out — custom work starts below.</p>
-  <div class="hero-sub mono"><div class="left muted">FIXED PRICES · SHIPS WORLDWIDE</div><div class="center"></div><div class="right muted"><a href="index.html" style="color:var(--accent)">← BACK TO INDEX</a></div></div>
+  <div class="hero-sub mono"><div class="left muted">CUSTOM ORDERS · WORLDWIDE</div><div class="center"></div><div class="right muted"><a href="index.html" style="color:var(--text)">← BACK TO INDEX</a></div></div>
 </section>
 
 <div class="sheet">
@@ -83,15 +83,7 @@
     <p class="soft-note">Need something custom? <a href="#order">order a custom poster →</a></p>
   </section>
 
-  <div class="sys"><span>SYS // CUSTOM</span></div>
-  <section class="sec" id="custom">
-    <span class="kicker">Custom</span>
-    <div class="price-grid">
-      <div class="price-card"><p class="mono muted" style="font-size:11px">POSTER / SINGLE</p><h3>$45+</h3><ul><li>1 custom poster</li><li>A4 + A3 + social files</li><li>2 revisions</li><li>3–5 days</li></ul><button class="btn-white mono" data-order="Poster - Starter $45">Order Starter</button></div>
-      <div class="price-card hot"><p class="mono" style="font-size:11px;color:#EDEDED">★ MOST POPULAR</p><h3>$95+</h3><p><b>Grunge / Illustrated</b></p><ul><li>Textured style</li><li>A2 print-ready + digital</li><li>3 revisions + source</li><li>Commercial license</li></ul><button class="btn-white mono" data-order="Poster - Pro Grunge $95">Order Pro</button></div>
-      <div class="price-card"><p class="mono muted" style="font-size:11px">LOGO + BRAND</p><h3>$220+</h3><ul><li>Logo + colors + fonts</li><li>Poster / social templates</li><li>1-pager guideline</li><li>1–2 weeks</li></ul><button class="btn-white mono" data-order="Brand Kit $220">Order Brand Kit</button></div>
-    </div>
-  </section>
+  
 
   <div class="sys"><span>SYS // SHOPIFY</span></div>
   <section class="sec" id="shopify">
@@ -115,11 +107,12 @@
       <form id="orderForm">
         <label>Name</label><input required name="name" placeholder="Jane Doe"/>
         <label>Email</label><input required type="email" name="email" placeholder="you@email.com"/>
-        <label>Package / Cart</label><select name="package" id="orderPackage"><option>Poster - Starter $45</option><option selected>Poster - Pro Grunge $95</option><option>Brand Kit $220</option><option>Logo $80</option><option>Cart checkout</option></select>
+        <label>Service Needed</label><select name="package" id="orderPackage"><option>Poster</option><option selected>Banner</option><option>Layout</option><option>Album Artwork</option><option>Brand Kit</option><option>Other</option><option>Cart checkout</option></select>
         <label>Details</label><textarea name="brief" rows="4" placeholder="Text, size, style..."></textarea>
         <button class="btn-white mono" type="submit">Send Order →</button>
       </form>
       <div class="mono muted" id="orderSummary" style="font-size:11px;margin-top:12px;white-space:pre-wrap"></div>
+      <p class="mono muted" id="orderStatus" style="font-size:11px;margin-top:8px" role="status"></p>
       <p class="mono muted" style="font-size:11px"><a href="index.html" style="color:#EDEDED">← just browsing? back to works</a></p>
     </div>
   </section>
@@ -136,16 +129,16 @@
       <p class="mono muted" id="infoCat" style="font-size:11px;letter-spacing:.15em">GRUNGE / 2025</p>
       <h3 id="infoTitle">Noise Zine</h3>
       <div class="stars" id="infoStars">★★★★★ <span class="mono muted">4.9 (128)</span></div>
-      <p class="modal-price"><span id="infoPrice">$45</span> <s id="infoOld" class="muted"></s> <span class="chip" id="infoBadge">BESTSELLER</span></p>
+      <p class="modal-price"><span id="infoPrice">Quoted</span> <s id="infoOld" class="muted"></s> <span class="chip" id="infoBadge">BESTSELLER</span></p>
       <p id="infoDesc" class="muted" style="line-height:1.7;font-size:.9rem"></p>
       <ul class="specs" id="infoSpecs"></ul>
       <div class="modal-row">
         <label class="mono muted" style="font-size:11px">QTY <input type="number" id="infoQty" value="1" min="1" max="10" style="width:64px;background:#181818;border:1px solid var(--border);border-radius:8px;color:#EDEDED;padding:8px" /></label>
         <label class="mono muted" style="font-size:11px">SIZE
           <select id="infoSize" style="background:#181818;border:1px solid var(--border);border-radius:8px;color:#EDEDED;padding:8px">
-            <option value="0">A3 (+$0)</option>
-            <option value="15">A2 (+$15)</option>
-            <option value="25">A2 + framed (+$45)</option>
+            <option value="0">A3 (incl.)</option>
+            <option value="15">A2 (extra)</option>
+            <option value="25">A2 + framed (extra)</option>
           </select>
         </label>
       </div>
@@ -162,6 +155,6 @@
 <!-- ===== cart drawer removed while shop is disabled (SHOP_ENABLED=false) ===== -->
 <div class="toast mono" id="toast">Added to cart ✓</div>
 
-<script src="script.js?v=50"></script>
+<script src="script.js?v=51"></script>
 </body>
 </html>
