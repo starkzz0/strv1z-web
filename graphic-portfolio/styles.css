@@ -23,6 +23,10 @@
   --serif:"Instrument Serif",Georgia,serif;
   --sans:"Geist",Inter,system-ui,-apple-system,sans-serif;
   --mono:"Space Mono",ui-monospace,SFMono-Regular,monospace;
+  --font-display:var(--head);
+  --font-lede:"Instrument Serif",Georgia,serif;
+  --font-body:"Newsreader","Source Serif 4",Georgia,serif;
+  --font-mono:var(--mono);
   --ws:clamp(24px,3vw,48px);
 }
 *{box-sizing:border-box}
@@ -34,7 +38,7 @@ html.lenis,html.lenis body{height:auto}
 /* swipe transition: body slides/fades out, next document slides in on the
    matching curve (see .enter-fwd/.enter-back). Durations pair with the JS
    navigation delay below so the page is never cut mid-motion. */
-body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);font-size:15px;line-height:1.65;-webkit-font-smoothing:antialiased;animation:pageIn .4s ease;transition:opacity .26s ease,transform .34s cubic-bezier(.22,1,.36,1);overflow-x:clip}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);font-size:15px;line-height:1.65;font-synthesis:none;-webkit-font-smoothing:antialiased;animation:pageIn .4s ease;transition:opacity .26s ease,transform .34s cubic-bezier(.22,1,.36,1);overflow-x:clip}
 body.leaving{opacity:0}
 body.leaving-fwd{opacity:0;transform:translateX(-72px)}
 body.leaving-back{opacity:0;transform:translateX(72px)}
@@ -259,16 +263,20 @@ html.scroll-locked{overflow:hidden}
 .faq-list{display:grid;max-width:none}
 .faq{background:none;border:0;border-top:1px solid var(--border);border-radius:0;overflow:hidden}
 .faq:last-child{border-bottom:1px solid var(--border)}
-.faq button{width:100%;background:none;border:0;color:var(--text);font-family:var(--sans);font-weight:500;font-size:.92rem;padding:18px 4px;display:flex;justify-content:space-between;gap:16px;cursor:pointer;text-align:left}
+.faq button{width:100%;background:none;border:0;color:var(--text);font-family:var(--sans);font-weight:500;font-size:.92rem;padding:20px 4px;display:flex;justify-content:space-between;gap:16px;cursor:pointer;text-align:left}
 .faq .num{color:var(--muted);font-family:var(--mono);font-size:12px}
-.faq .body{display:grid;grid-template-rows:0fr;opacity:0;visibility:hidden;padding:0 4px;max-width:44rem;transition:grid-template-rows .4s cubic-bezier(.22,1,.36,1),opacity .3s ease,visibility 0s linear .4s,padding .4s cubic-bezier(.22,1,.36,1)}
+.faq .body{display:grid;grid-template-rows:0fr;opacity:0;visibility:hidden;padding:0 4px;max-width:62ch}
 .faq .body-in{overflow:hidden;min-height:0;color:var(--muted);font-size:.9rem;line-height:1.7}
-.faq.open .body{grid-template-rows:1fr;opacity:1;visibility:visible;padding-bottom:20px;transition:grid-template-rows .4s cubic-bezier(.22,1,.36,1),opacity .3s ease,visibility 0s,padding .4s cubic-bezier(.22,1,.36,1)}
-.faq .plus{color:var(--muted);font-size:1rem;transition:transform .4s cubic-bezier(.22,1,.36,1),color .2s ease}
+.faq.open .body{grid-template-rows:1fr;opacity:1;visibility:visible;padding:4px 4px 20px}
+@media (prefers-reduced-motion:no-preference){
+  .faq .body{transition:grid-template-rows .3s cubic-bezier(.22,1,.36,1),opacity .3s ease,visibility 0s linear .3s,padding .3s ease}
+  .faq.open .body{transition:grid-template-rows .3s cubic-bezier(.22,1,.36,1),opacity .3s ease,visibility 0s,padding .3s ease}
+}
+.faq .plus{color:var(--muted);font-size:1rem;transition:transform .25s cubic-bezier(.22,1,.36,1),color .2s ease}
 .faq.open .plus{transform:rotate(45deg);color:var(--text)}
 .faq a{color:var(--text)}
 /* body links: bone text, accent underline that thickens on hover */
-.faq a,.soft-note a,.term p a,.formbox p a{text-decoration:underline;text-decoration-color:var(--text);text-underline-offset:3px}
+.faq a,.soft-note a,.term p a,.formbox p a{text-decoration:underline;text-decoration-color:var(--text);text-underline-offset:.2em}
 .faq a:hover,.soft-note a:hover,.term p a:hover,.formbox p a:hover{text-decoration-thickness:2px}
 /* placeholder text follows muted labels */
 .formbox input::placeholder,.formbox textarea::placeholder{color:var(--muted);opacity:1}
@@ -310,7 +318,7 @@ html.scroll-locked{overflow:hidden}
 .terms-grid .term:last-child{border-bottom:1px solid var(--border)}
 .term h3{margin:0 0 12px;font-size:.95rem;font-weight:500;text-transform:uppercase;letter-spacing:.04em}
 .term h3 .num{color:var(--muted);font-family:var(--mono);font-size:12px;margin-right:10px}
-.term p{margin:0 0 12px;color:var(--muted);line-height:1.75;font-size:.9rem}
+.term p{margin:0 0 1em;color:var(--muted);line-height:1.75;font-size:.9rem}
 .term p:last-child{margin-bottom:0}
 .term h4{margin:20px 0 8px;font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--text)}
 .term ul{margin:8px 0 12px;padding-left:20px;color:var(--muted);line-height:1.8;font-size:.88rem}
@@ -555,4 +563,18 @@ html.js .rv-scale.in{opacity:1;transform:none}
 }
 @media(prefers-reduced-motion:reduce){.contact-pill{transition:none}}
 /* body copy - serif roman; mono labels and metadata keep their voice */
-.about-card p:not(.mono),.faq .body .body-in,.term p:not(.mono),.term blockquote,.page-lede,.soft-note{font-family:var(--serif);font-style:normal}
+/* paragraph system — lede (Instrument Serif, large only), body (Newsreader), mono untouched */
+.about-card > p:first-child,.page-lede{font-family:var(--font-lede);font-weight:400;font-style:normal;font-size:clamp(22px,1.8vw,28px);line-height:1.35;letter-spacing:.005em;color:var(--text);max-width:62ch}
+.faq .body .body-in,.term p:not(.mono),.term blockquote,.about-card > p:not(:first-child):not(.mono){font-family:var(--font-body);font-weight:400;font-style:normal;font-size:clamp(17px,1.2vw,19px);line-height:1.65;letter-spacing:.01em;word-spacing:.03em;color:var(--text);max-width:62ch}
+.about-card > p + p{margin-top:1em}
+.about-card p.mono,.soft-note,.formbox p.mono{font-family:var(--font-body);font-weight:400;font-style:normal;font-size:14px;line-height:1.6;letter-spacing:.06em;color:var(--muted)}
+.about-card p b{font-family:var(--font-body);font-weight:500}
+.term p strong{font-weight:500}
+@media(max-width:600px){
+  .about-card > p:first-child,.page-lede{font-size:22px;line-height:1.6}
+  .faq .body .body-in,.term p:not(.mono),.term blockquote,.about-card > p:not(:first-child):not(.mono){font-size:17px;line-height:1.6}
+}
+@media(min-width:1600px){
+  .about-card > p:first-child,.page-lede{font-size:30px}
+  .faq .body .body-in,.term p:not(.mono),.term blockquote,.about-card > p:not(:first-child):not(.mono){font-size:20px}
+}
