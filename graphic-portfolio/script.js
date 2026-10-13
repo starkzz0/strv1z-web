@@ -144,7 +144,7 @@ function smoothTo(target){
   const el = typeof target === "string" ? document.querySelector(target) : target;
   if(!el) return;
   if(window.__lenis) window.__lenis.scrollTo(el, { offset:-90, duration:1.2 });
-  else el.scrollIntoView({behavior:"smooth"});
+  else el.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"});
 }
 // modal scroll lock — freezes the page behind any overlay, keeps inner scrolling,
 // and compensates the scrollbar width so nothing shifts sideways.
