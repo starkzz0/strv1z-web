@@ -555,4 +555,4 @@ html.js .rv-scale.in{opacity:1;transform:none}
 }
 @media(prefers-reduced-motion:reduce){.contact-pill{transition:none}}
 /* body copy - serif roman; mono labels and metadata keep their voice */
-.about-card p:not(.mono),.faq .body .body-in,.term p:not(.mono),.term blockquote,.page-lede{font-family:var(--serif);font-style:normal}
+.about-card p:not(.mono),.faq .body .body-in,.term p:not(.mono),.term blockquote,.page-lede,.soft-note{font-family:var(--serif);font-style:normal}
