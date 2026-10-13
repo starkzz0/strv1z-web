@@ -16,10 +16,10 @@ const SITE = { name:"strv1z", giant:"STRV1Z", city:"YOUR CITY", email:"hello@exa
 const POSTERS = [
   { id:"NOISE", title:"Noise Zine", desc:"GRUNGE TYPE / 2025", bg:"#181818" },
   { id:"BLOOM", title:"Bloom Fest", desc:"TEXTURED / 2025", bg:"#24241F" },
-  { id:"FERN", title:"Fern & Co", desc:"BRAND POSTER / 2024", bg:"#181818" },
-  { id:"ARCADE", title:"Retro Arcade", desc:"LOGO + POSTER / 2024", bg:"#181818" },
-  { id:"SUNSET", title:"Sunset Records", desc:"GIG POSTER / 2024", bg:"#2A2118" },
-  { id:"TYPE", title:"Grotesk Spec", desc:"TYPE POSTER / 2023", bg:"#181818" },
+  { id:"FERN", title:"Fern & Co", client:"Personal project", desc:"BRAND POSTER / 2024", bg:"#181818" },
+  { id:"ARCADE", title:"Retro Arcade", client:"Personal project", desc:"LOGO + POSTER / 2024", bg:"#181818" },
+  { id:"SUNSET", title:"Sunset Records", client:"Personal project", desc:"GIG POSTER / 2024", bg:"#2A2118" },
+  { id:"TYPE", title:"Grotesk Spec", client:"Personal project", desc:"TYPE POSTER / 2023", bg:"#181818" },
 ];
 const FAQS = [
   ["What services do you provide?","Custom posters, banners, page layouts and album artwork — from concept to print-ready files. See <a href='#services'>Services</a> for current offerings."],
@@ -209,12 +209,12 @@ window.addEventListener("load", ()=>{
 
 // featured scroll-tilted-grid (vanilla compat — replaces old auto-scroll strip)
 const FEATURED = [
-  { src:"images/feat-1.l.jpg", fb:"https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1000&auto=format&fit=crop", alt:"Persona Gold — grunge anime poster by strv1z", title:"Persona Gold", sub:"2025" },
-  { src:"images/feat-2.l.jpg", fb:"https://images.unsplash.com/photo-1512496015851-a90fb38ba796?q=80&w=1000&auto=format&fit=crop", alt:"Egress — pale collage poster by strv1z", title:"Egress", sub:"2025" },
-  { src:"https://images.unsplash.com/photo-1568557412756-7d219873dd11?w=900&q=80&auto=format&fit=crop", alt:"Retro Arcade brand poster", title:"Retro Arcade", sub:"2024" },
-  { src:"https://images.unsplash.com/photo-1624344965194-6aa6729ad832?w=900&q=80&auto=format&fit=crop", alt:"Sunset Records gig poster", title:"Sunset Records", sub:"2024" },
-  { src:"https://images.unsplash.com/photo-1633382148761-d56d55cee3cd?w=900&q=80&auto=format&fit=crop", alt:"Grotesk type specimen poster", title:"Grotesk Spec", sub:"2023" },
-  { src:"https://images.unsplash.com/photo-1514906689926-25ba6dcb584b?w=900&q=80&auto=format&fit=crop", alt:"Fern and Co brand poster", title:"Fern & Co", sub:"2024" },
+  { src:"images/feat-1.l.jpg", fb:"https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1000&auto=format&fit=crop", alt:"Persona Gold — grunge anime poster by strv1z", title:"Persona Gold", client:"Personal project", sub:"2025" },
+  { src:"images/feat-2.l.jpg", fb:"https://images.unsplash.com/photo-1512496015851-a90fb38ba796?q=80&w=1000&auto=format&fit=crop", alt:"Egress — pale collage poster by strv1z", title:"Egress", client:"Personal project", sub:"2025" },
+  { src:"https://images.unsplash.com/photo-1568557412756-7d219873dd11?w=900&q=80&auto=format&fit=crop", alt:"Retro Arcade brand poster", title:"Retro Arcade", client:"Personal project", sub:"2024" },
+  { src:"https://images.unsplash.com/photo-1624344965194-6aa6729ad832?w=900&q=80&auto=format&fit=crop", alt:"Sunset Records gig poster", title:"Sunset Records", client:"Personal project", sub:"2024" },
+  { src:"https://images.unsplash.com/photo-1633382148761-d56d55cee3cd?w=900&q=80&auto=format&fit=crop", alt:"Grotesk type specimen poster", title:"Grotesk Spec", client:"Personal project", sub:"2023" },
+  { src:"https://images.unsplash.com/photo-1514906689926-25ba6dcb584b?w=900&q=80&auto=format&fit=crop", alt:"Fern and Co brand poster", title:"Fern & Co", client:"Personal project", sub:"2024" },
 ];
 const tilted = $("tiltedGrid");
 if(tilted){
@@ -260,12 +260,12 @@ if(tilted){
 // TEMPLATE:
 // { title:"My Poster", cat1:"Grunge", cat2:"Poster", year:"2026", img:"images/my-poster.jpg", fb:"", dims:"3600 × 4500 PX", desc:"One-line description.", process:["Step one","Step two"], variants:[{ label:"VERSION 01", img:"images/my-poster.jpg" },{ label:"VERSION 02", img:"images/my-poster-detail.jpg" }] },
 const WORKS = [
-  { title:"Persona Gold", cat1:"Grunge", cat2:"Poster", format:"posters", year:"2025", w:1800,h:2400, dims:"3600 × 4500 PX", img:"images/feat-1.l.jpg", fb:"https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=900&auto=format&fit=crop", desc:"Gold-foil grunge poster built around a single heavyweight portrait and hand-set type. Grain, tears and misregistration kept in on purpose.", process:["Sketch + reference board","Custom type setting","Texture + distress pass","Print + social export"] },
-  { title:"Egress", cat1:"Type", cat2:"Poster", format:"posters", year:"2025", w:1800,h:2400, dims:"3600 × 4500 PX", img:"images/feat-2.l.jpg", fb:"https://images.unsplash.com/photo-1512496015851-a90fb38ba796?q=80&w=900&auto=format&fit=crop", desc:"Pale collage study in restraint — soft paper tones, one quiet grid, minimal type doing maximal work.", process:["Collage studies","Grid + type system","Paper texture grade","Print + social export"] },
-  { title:"Retro Arcade", cat1:"Brand", cat2:"Poster", format:"banners", year:"2024", dims:"3600 × 4500 PX", img:"https://images.unsplash.com/photo-1568557412756-7d219873dd11?w=900&q=80&auto=format&fit=crop", desc:"Neon arcade identity piece — lockup, poster and color system for a fictional retro venue.", process:["Lockup sketches","Neon color system","Poster application","Brand sheet export"] },
-  { title:"Sunset Records", cat1:"Gig", cat2:"Poster", format:"banners", year:"2024", dims:"3600 × 4500 PX", img:"https://images.unsplash.com/photo-1624344965194-6aa6729ad832?w=900&q=80&auto=format&fit=crop", desc:"Gig poster in warm sunset grain — bold grotesk over heat-toned photography.", process:["Photo treatment","Grotesk setting","Grain + color grade","Print + social export"] },
-  { title:"Grotesk Spec", cat1:"Type", cat2:"Poster", format:"layouts", year:"2023", dims:"3600 × 4500 PX", img:"https://images.unsplash.com/photo-1633382148761-d56d55cee3cd?w=900&q=80&auto=format&fit=crop", desc:"Twelve-weight type specimen sheet — grid notes, sizes and print-sharp setting for designers.", process:["Weight survey","Grid construction","Specimen setting","A2 print export"] },
-  { title:"Fern & Co", cat1:"Brand", cat2:"Poster", format:"layouts", year:"2024", dims:"3600 × 4500 PX", img:"https://images.unsplash.com/photo-1514906689926-25ba6dcb584b?w=900&q=80&auto=format&fit=crop", desc:"Small brand poster pack — logo lockup, poster and a one-page mini guideline.", process:["Lockup + palette","Poster design","Mini guideline","Vector + print export"] },
+  { title:"Persona Gold", client:"Personal project", cat1:"Grunge", cat2:"Poster", format:"posters", year:"2025", w:1800,h:2400, dims:"3600 × 4500 PX", img:"images/feat-1.l.jpg", fb:"https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=900&auto=format&fit=crop", desc:"Gold-foil grunge poster built around a single heavyweight portrait and hand-set type. Grain, tears and misregistration kept in on purpose.", process:["Sketch + reference board","Custom type setting","Texture + distress pass","Print + social export"] },
+  { title:"Egress", client:"Personal project", cat1:"Type", cat2:"Poster", format:"posters", year:"2025", w:1800,h:2400, dims:"3600 × 4500 PX", img:"images/feat-2.l.jpg", fb:"https://images.unsplash.com/photo-1512496015851-a90fb38ba796?q=80&w=900&auto=format&fit=crop", desc:"Pale collage study in restraint — soft paper tones, one quiet grid, minimal type doing maximal work.", process:["Collage studies","Grid + type system","Paper texture grade","Print + social export"] },
+  { title:"Retro Arcade", client:"Personal project", cat1:"Brand", cat2:"Poster", format:"banners", year:"2024", dims:"3600 × 4500 PX", img:"https://images.unsplash.com/photo-1568557412756-7d219873dd11?w=900&q=80&auto=format&fit=crop", desc:"Neon arcade identity piece — lockup, poster and color system for a fictional retro venue.", process:["Lockup sketches","Neon color system","Poster application","Brand sheet export"] },
+  { title:"Sunset Records", client:"Personal project", cat1:"Gig", cat2:"Poster", format:"banners", year:"2024", dims:"3600 × 4500 PX", img:"https://images.unsplash.com/photo-1624344965194-6aa6729ad832?w=900&q=80&auto=format&fit=crop", desc:"Gig poster in warm sunset grain — bold grotesk over heat-toned photography.", process:["Photo treatment","Grotesk setting","Grain + color grade","Print + social export"] },
+  { title:"Grotesk Spec", client:"Personal project", cat1:"Type", cat2:"Poster", format:"layouts", year:"2023", dims:"3600 × 4500 PX", img:"https://images.unsplash.com/photo-1633382148761-d56d55cee3cd?w=900&q=80&auto=format&fit=crop", desc:"Twelve-weight type specimen sheet — grid notes, sizes and print-sharp setting for designers.", process:["Weight survey","Grid construction","Specimen setting","A2 print export"] },
+  { title:"Fern & Co", client:"Personal project", cat1:"Brand", cat2:"Poster", format:"layouts", year:"2024", dims:"3600 × 4500 PX", img:"https://images.unsplash.com/photo-1514906689926-25ba6dcb584b?w=900&q=80&auto=format&fit=crop", desc:"Small brand poster pack — logo lockup, poster and a one-page mini guideline.", process:["Lockup + palette","Poster design","Mini guideline","Vector + print export"] },
 ];
 (function(){
   const wg = $("workGrid"), wl = $("workList");
@@ -310,7 +310,8 @@ const WORKS = [
     if($("workVariants")) $("workVariants").innerHTML = vs.map((v,vi)=>`<button type="button" data-v="${vi}">${v.label}</button>`).join("");
     showVariant(0);
     if($("workTitle")) $("workTitle").textContent = w.title;
-    if($("workNote")) $("workNote").textContent = w.desc || "";
+    if($("workType")) $("workType").textContent = "TYPE: " + (w.format || "").toUpperCase();
+    if($("workClient")) $("workClient").textContent = "CLIENT: " + (w.client || "").toUpperCase();
     if($("workNum")) $("workNum").textContent = String(i+1).padStart(2,"0") + " / " + String(WORKS.length).padStart(2,"0");
     if($("workYear")) $("workYear").textContent = "YEAR: " + w.year;
     if($("workDims")) $("workDims").textContent = w.dims;
