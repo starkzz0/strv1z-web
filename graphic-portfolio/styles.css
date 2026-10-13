@@ -370,22 +370,46 @@ html.scroll-locked{overflow:hidden}
 .work-peek.on{opacity:1;transform:scale(1)}
 .work-peek img{width:100%;height:100%;object-fit:cover}
 
-/* ---------- project preview: compact card (poster + title + variants, pops in/out) ---------- */
-.pv-backdrop{position:fixed;inset:0;background:rgba(13,16,20,.8);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .25s ease,visibility 0s linear .28s}
-.pv-backdrop.open{opacity:1;visibility:visible;pointer-events:auto;transition:opacity .25s ease,visibility 0s}
-.pv{position:relative;background:var(--surface);border:1px solid var(--border);border-radius:20px;width:fit-content;max-width:min(880px,calc(100vw - 40px));max-height:92dvh;overflow:auto;padding:12px;transform:scale(.94) translateY(12px);opacity:0;transition:transform .32s cubic-bezier(.22,1,.36,1),opacity .25s ease;will-change:transform,opacity}
+/* ---------- project lightbox: full-viewport card, scrollable info, pinned nav ---------- */
+.pv-backdrop{position:fixed;inset:0;z-index:100;display:grid;place-items:center;padding:32px;background:rgba(13,16,20,.92);opacity:0;visibility:hidden;pointer-events:none;transition:opacity .2s ease,visibility 0s linear .2s}
+@supports ((-webkit-backdrop-filter:blur(1px)) or (backdrop-filter:blur(1px))){
+  .pv-backdrop{-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+}
+.pv-backdrop.open{opacity:1;visibility:visible;pointer-events:auto;transition:opacity .2s ease,visibility 0s}
+.pv{position:relative;background:var(--surface);border:1px solid var(--border);border-radius:16px;width:min(1200px,100%);height:min(760px,calc(100dvh - 64px));display:grid;grid-template-columns:minmax(0,1fr) 360px;grid-template-rows:minmax(0,1fr);overflow:hidden;transform:scale(.98);opacity:0;transition:transform .25s cubic-bezier(.16,1,.3,1),opacity .25s ease;will-change:transform,opacity}
 .pv-backdrop.open .pv.go{transform:none;opacity:1}
-.pv-backdrop.closing .pv{transform:scale(.95) translateY(10px);opacity:0}
-.pv-x{position:absolute;top:22px;right:22px;z-index:2;background:rgba(13,16,20,.7);border:1px solid var(--border);color:var(--text);border-radius:999px;width:34px;height:34px;cursor:pointer;font-size:14px;line-height:1}
-.pv-x:hover{border-color:var(--muted)}
-.pv-art{display:flex;justify-content:center;border-radius:12px;overflow:hidden;background:#0D1014}
-.pv-art img{width:auto;height:auto;max-width:100%;max-height:56dvh;object-fit:contain;display:block}
-.pv-info{background:#101010;border:1px solid var(--border);border-radius:14px;margin-top:12px;padding:22px 22px 20px;display:grid;gap:12px}
-.pv-info h3{margin:0;font-family:var(--head);font-weight:700;font-size:1.4rem;letter-spacing:-.02em;text-transform:uppercase}
-.pv-info p{margin:0}
+.pv-backdrop.closing .pv{transform:scale(.99);opacity:0}
+.pv-x{position:absolute;top:16px;right:16px;z-index:2;background:rgba(21,26,32,.9);border:1px solid var(--border);color:var(--text);border-radius:999px;width:44px;height:44px;cursor:pointer;font-size:15px;line-height:1}
+.pv-x:hover{border-color:var(--text)}
+#workClose:focus-visible{outline:2px solid var(--text);outline-offset:2px}
+.pv-art{background:var(--bg);padding:24px;display:grid;place-items:center;position:relative;min-width:0;min-height:0}
+.pv-art img{max-width:100%;max-height:100%;width:auto;height:auto;min-width:0;min-height:0;object-fit:contain;display:block;border-radius:10px;border:1px solid var(--border);transition:opacity .2s ease}
+#workModal .pv.stepping .pv-art img{opacity:0}
+.pv-info{display:flex;flex-direction:column;min-height:0;min-width:0;border-left:1px solid var(--border);padding:28px 28px 0;overflow-y:auto}
+.pv-info h3{margin:0;font-family:var(--head);font-weight:700;font-size:clamp(22px,2.2vw,32px);line-height:1.05;letter-spacing:-.02em;text-transform:uppercase}
+.pv-meta{margin:16px 0 0;padding:0}
+.pv-meta>div{display:grid;grid-template-columns:92px 1fr;gap:12px;padding:9px 0;border-top:1px solid var(--border)}
+.pv-meta>div:first-child{border-top:0;padding-top:0}
+.pv-meta dt,.pv-meta dd{margin:0;font-family:var(--mono);font-size:13px;letter-spacing:.08em;text-transform:uppercase;line-height:1.5}
+.pv-meta dt{color:var(--muted)}
+.pv-meta dd{color:var(--text)}
+.pv-variants-label{font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--muted);margin:18px 0 10px}
 .pv-variants{display:flex;gap:8px;flex-wrap:wrap}
 .pv-variants button{font-family:var(--mono);font-size:12px;letter-spacing:.08em;padding:9px 16px;border-radius:8px;border:1px solid var(--border);background:none;color:var(--muted);cursor:pointer;transition:background .15s ease,color .15s ease}
 .pv-variants button.on{background:var(--hl);border-color:var(--hl);color:var(--on-hl);font-weight:600}
+.pv-variants[hidden],.pv-variants-label[hidden]{display:none}
+.pv-foot{display:flex;align-items:center;gap:12px;border-top:1px solid var(--border);padding:16px 0;flex:none;margin-top:auto;position:sticky;bottom:0;background:var(--surface)}
+.pv-foot button{flex:1;min-height:44px;font-family:var(--mono);font-size:11px;letter-spacing:.1em;background:none;border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:9px 14px;cursor:pointer}
+.pv-foot button:hover{border-color:var(--text);color:var(--text)}
+.pv-counter{font-family:var(--mono);font-size:12px;letter-spacing:.1em;color:var(--muted);white-space:nowrap}
+@media(max-width:899px){
+  .pv-backdrop{padding:12px}
+  .pv{grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) auto;height:calc(100dvh - 32px);padding-bottom:max(16px,env(safe-area-inset-bottom))}
+  .pv-art{padding:12px}
+  .pv-info{border-left:0;border-top:1px solid var(--border);padding:20px 20px 0;max-height:40dvh}
+  #workClose{top:12px;right:12px}
+  .pv-info h3{font-size:clamp(20px,6vw,28px)}
+}
 .cols{display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px;align-items:end}
 
 /* ---------- footer ---------- */
@@ -517,11 +541,6 @@ html.js .rv-scale.in{opacity:1;transform:none}
   body.leaving-fwd,body.leaving-back{transform:none}
 }
 /* lightbox prev/next row (works modal) */
-.pv-nav{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:14px}
-.pv-nav button{font-family:var(--mono);font-size:11px;letter-spacing:.1em;background:none;border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:9px 14px;cursor:pointer}
-.pv-nav button:hover{border-color:var(--text);color:var(--text)}
 
 .pv{touch-action:pan-y}
-/* lightbox step transition - whole card cross-slides softly (JS toggles .stepping) */
-#workModal .pv.stepping{opacity:.25;transform:translateX(calc(var(--step-dir,1)*-20px)) scale(.985);transition:opacity .16s ease,transform .16s ease}
-@media(prefers-reduced-motion:reduce){#workModal .pv.stepping{transition:none}}
+

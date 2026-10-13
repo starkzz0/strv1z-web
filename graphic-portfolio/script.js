@@ -308,14 +308,21 @@ const WORKS = [
       document.querySelectorAll("#workVariants button").forEach((x,xi)=>x.classList.toggle("on", xi === v));
     }
     if($("workVariants")) $("workVariants").innerHTML = vs.map((v,vi)=>`<button type="button" data-v="${vi}">${v.label}</button>`).join("");
+    // variants row only exists for multi-version pieces
+    const multi = vs.length > 1;
+    if($("workVariantsLabel")) $("workVariantsLabel").hidden = !multi;
+    if($("workVariants")) $("workVariants").hidden = !multi;
     showVariant(0);
     if($("workTitle")) $("workTitle").textContent = w.title;
-    if($("workType")) $("workType").textContent = "TYPE: " + (w.format || "").toUpperCase();
-    if($("workClient")) $("workClient").textContent = "CLIENT: " + (w.client || "").toUpperCase();
-    if($("workNum")) $("workNum").textContent = String(i+1).padStart(2,"0") + " / " + String(WORKS.length).padStart(2,"0");
-    if($("workYear")) $("workYear").textContent = "YEAR: " + w.year;
-    if($("workDims")) $("workDims").textContent = w.dims;
+    // metadata table — real values only (empty and label==value rows dropped)
+    (function(){
+      const fmt = {posters:"Poster",banners:"Banner",layouts:"Layout"}[(w.format||"").toLowerCase()] || "Artwork";
+      const rows = [["Year",w.year],["Type",fmt],["Client",w.client]].filter(([k,v])=>v && String(v).trim() && String(v).trim().toUpperCase()!==k.toUpperCase());
+      if($("workMeta")) $("workMeta").innerHTML = rows.map(([k,v])=>`<div><dt>${k}</dt><dd>${v}</dd></div>`).join("");
+    })();
+    if($("pvCounter")) $("pvCounter").textContent = String(i+1).padStart(2,"0") + " / " + String(WORKS.length).padStart(2,"0");
     const m = $("workModal");
+    if(!m.classList.contains("open")) lastOpener = document.activeElement;
     m.classList.remove("closing"); m.classList.add("open"); m.setAttribute("aria-hidden","false");
     lockScroll(true);
     const pvBox = m.querySelector(".pv");
@@ -326,7 +333,7 @@ const WORKS = [
       setTimeout(()=>{ if(!pvBox.classList.contains("go")) kick(); }, 350);
     }
   }
-  let openWorkIdx = -1;
+  let openWorkIdx = -1, lastOpener = null;
   if($("workVariants")) $("workVariants").addEventListener("click", e=>{
     const b = e.target.closest("button"); if(!b || openWorkIdx < 0) return;
     const w = WORKS[openWorkIdx]; if(!w) return;
@@ -336,8 +343,7 @@ const WORKS = [
     if(media){ media.onerror = function(){ this.onerror=null; this.src=it.fb||w.fb||it.img; }; media.src = it.img; }
     document.querySelectorAll("#workVariants button").forEach(x=>x.classList.toggle("on", x === b));
   });
-  // lightbox stepping — soft cross-slide (no modal re-pop, no focus steal);
-  // swaps content mid-fade, instant under reduced motion
+  // lightbox stepping — image crossfade; swaps content mid-fade, instant under reduced motion
   let stepTimer = 0;
   function stepWork(d){
     if(!WORKS.length) return;
@@ -346,10 +352,11 @@ const WORKS = [
     if(!box || matchMedia("(prefers-reduced-motion: reduce)").matches){ openWork(next, true); return; }
     clearTimeout(stepTimer);
     box.classList.remove("stepping");
-    box.style.setProperty("--step-dir", d > 0 ? 1 : -1);
     void box.offsetWidth;
     box.classList.add("stepping");
-    stepTimer = setTimeout(()=>{ openWork(next, true); box.classList.remove("stepping"); }, 170);
+    // preload neighbors so the next image is likely decoded already
+    [WORKS[next+1],WORKS[next-1]].forEach(n=>{ if(n && n.img){ const im = new Image(); im.src = n.img; } });
+    stepTimer = setTimeout(()=>{ openWork(next, true); box.classList.remove("stepping"); }, 200);
   }
   if($("workPrev")) $("workPrev").addEventListener("click", ()=>stepWork(-1));
   if($("workNext")) $("workNext").addEventListener("click", ()=>stepWork(1));
@@ -369,6 +376,8 @@ const WORKS = [
     // fade the backdrop + pop the card in one pass (open removed immediately)
     m.classList.add("closing"); m.classList.remove("open"); m.setAttribute("aria-hidden","true");
     lockScroll(false);
+    if(lastOpener && document.contains(lastOpener)){ try{ lastOpener.focus({preventScroll:true}); }catch(e){} }
+    lastOpener = null;
     setTimeout(()=>m.classList.remove("closing"), 320);
   }
   document.addEventListener("click", e=>{
@@ -378,6 +387,16 @@ const WORKS = [
   if($("workClose")) $("workClose").addEventListener("click", closeWork);
   if($("workModal")) $("workModal").addEventListener("click", e=>{ if(e.target.id === "workModal") closeWork(); });
   document.addEventListener("keydown", e=>{ if(e.key === "Escape") closeWork(); const m=$("workModal"); if(m && m.classList.contains("open")){ if(e.key === "ArrowLeft") stepWork(-1); if(e.key === "ArrowRight") stepWork(1); } });
+  // focus trap — Tab cycles inside the open dialog
+  document.addEventListener("keydown", e=>{
+    if(e.key !== "Tab") return;
+    const m = $("workModal"); if(!m || !m.classList.contains("open")) return;
+    const f = [...m.querySelectorAll('button,[href],input,select,textarea,[tabindex]:not([tabindex="-1"])')].filter(el=>!el.disabled && el.offsetParent !== null);
+    if(!f.length) return;
+    const first = f[0], last = f[f.length-1];
+    if(e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
+    else if(!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
+  });
   document.querySelectorAll(".works-toggle .chip").forEach(ch=>ch.addEventListener("click", ()=>{
     document.querySelectorAll(".works-toggle .chip").forEach(c=>{ c.classList.remove("active"); c.setAttribute("aria-selected","false"); });
     ch.classList.add("active"); ch.setAttribute("aria-selected","true");
