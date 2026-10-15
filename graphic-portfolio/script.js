@@ -266,6 +266,8 @@ const WORKS = [
   { title:"Sunset Records", client:"Personal project", cat1:"Gig", cat2:"Poster", format:"banners", year:"2024", dims:"3600 × 4500 PX", img:"https://images.unsplash.com/photo-1624344965194-6aa6729ad832?w=900&q=80&auto=format&fit=crop", desc:"Gig poster in warm sunset grain — bold grotesk over heat-toned photography.", process:["Photo treatment","Grotesk setting","Grain + color grade","Print + social export"] },
   { title:"Grotesk Spec", client:"Personal project", cat1:"Type", cat2:"Poster", format:"layouts", year:"2023", dims:"3600 × 4500 PX", img:"https://images.unsplash.com/photo-1633382148761-d56d55cee3cd?w=900&q=80&auto=format&fit=crop", desc:"Twelve-weight type specimen sheet — grid notes, sizes and print-sharp setting for designers.", process:["Weight survey","Grid construction","Specimen setting","A2 print export"] },
   { title:"Fern & Co", client:"Personal project", cat1:"Brand", cat2:"Poster", format:"layouts", year:"2024", dims:"3600 × 4500 PX", img:"https://images.unsplash.com/photo-1514906689926-25ba6dcb584b?w=900&q=80&auto=format&fit=crop", desc:"Small brand poster pack — logo lockup, poster and a one-page mini guideline.", process:["Lockup + palette","Poster design","Mini guideline","Vector + print export"] },
+  // Add new works below — drop images in images/ folder
+  { title:"New Work", client:"Personal project", cat1:"Poster", cat2:"Design", format:"posters", year:"2026", dims:"3600 × 4500 PX", img:"https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=900&auto=format&fit=crop", fb:"", desc:"Add your description here.", process:["Concept","Design","Final Export"] },
 ];
 (function(){
   const wg = $("workGrid"), wl = $("workList");
