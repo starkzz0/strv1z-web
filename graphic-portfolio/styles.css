@@ -276,6 +276,8 @@ html.scroll-locked{overflow:hidden}
 
 /* ---------- contact CTA: big line + serif pills ---------- */
 .cta-title{font-family:var(--head);font-weight:700;letter-spacing:-.02em;line-height:.92;font-size:clamp(64px,8vw,144px);margin:0 0 28px;text-transform:uppercase}
+/* never rag-wrap mid-line — the <br> still forces the intended two-line break */
+.cta-title{white-space:nowrap}
 .cta-pills{display:grid;gap:12px;justify-items:start;margin-bottom:clamp(40px,5vw,72px)}
 .cta-pill{font-family:var(--serif);font-style:italic;font-size:clamp(1.4rem,3vw,2.2rem);line-height:1;color:var(--text);text-decoration:none;border:1px solid var(--muted);border-radius:999px;padding:10px 28px 14px;transition:background .2s ease,color .2s ease,border-color .2s ease}
 .cta-pill:hover{background:var(--hl);color:var(--on-hl);border-color:var(--hl)}
@@ -605,6 +607,10 @@ html.js .rv-scale.in{opacity:1;transform:none}
   #showAll:hover{color:var(--text)}
   #workIndex{scroll-margin-top:96px;padding-top:28px}
   .wgrid{gap:12px}
+  /* CTA headline: the 64px floor can't fit "LET'S WORK" on a phone, so scale it
+   down to the gutter width. Cap equals the desktop floor, so 767→768px is seamless. */
+  #contact{padding-left:20px;padding-right:20px}
+  .cta-title{font-size:clamp(33px,11vw,64px);line-height:1;margin-bottom:24px}
   .wcard-media{border-radius:14px;overflow:hidden}
   .soft-note{margin-top:32px}
   #workGrid{transition:opacity .2s ease}

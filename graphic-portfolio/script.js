@@ -757,12 +757,19 @@ if(hf) hf.addEventListener("submit", async e=>{
   function splitChars(el){
     if(!el || el.dataset.split) return;
     el.dataset.split = "1";
-    // keep the original wording available to screen readers (chars are aria-hidden)
-    const spoken = el.textContent.replace(/\s+/g," ").trim();
+    // keep the original wording available to screen readers (chars are aria-hidden).
+    // read from a clone so <br> becomes a real space — plain textContent would
+    // splice multi-line headings together ("let's worktogether").
+    const probe = el.cloneNode(true);
+    probe.querySelectorAll("br").forEach(br => br.replaceWith(document.createTextNode(" ")));
+    const spoken = (probe.textContent || "").replace(/\s+/g," ").trim();
     if(spoken) el.setAttribute("aria-label", spoken);
     let idx = 0;
     const out = [];
-    el.childNodes.forEach(node=>{
+    // snapshot: childNodes is live, and the element branch below MOVES nodes out
+    // of el — mutating it mid-loop would skip every following sibling.
+    const nodes = [...el.childNodes];
+    nodes.forEach(node=>{
       if(node.nodeType === 3){
         node.textContent.split("").forEach(ch=>{
           if(ch === " " || ch === "\n"){ out.push(document.createTextNode(" ")); return; }
