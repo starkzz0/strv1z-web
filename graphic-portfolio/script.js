@@ -216,9 +216,98 @@ const FEATURED = [
   { src:"https://images.unsplash.com/photo-1633382148761-d56d55cee3cd?w=900&q=80&auto=format&fit=crop", alt:"Grotesk type specimen poster", title:"Grotesk Spec", client:"Personal project", sub:"2023" },
   { src:"https://images.unsplash.com/photo-1514906689926-25ba6dcb584b?w=900&q=80&auto=format&fit=crop", alt:"Fern and Co brand poster", title:"Fern & Co", client:"Personal project", sub:"2024" },
 ];
+// ============================================================
+// RESPONSIVE IMAGES
+// ------------------------------------------------------------
+// Posters listed in RESP_SRC get <picture> markup with resized tiers.
+// To optimize ANOTHER poster: generate <base>.640/1100/1800.webp and
+// <base>.640/1100.jpg into images/, then add its ".l.jpg" path here.
+// Anything else (Unsplash-hosted works, plain images) renders as a
+// normal <img>, unchanged.
+// Tiers:  640 = grid cards / phone   1100 = desktop + retina cards
+//         1800 = lightbox at retina (WebP) / the original .l.jpg (JPEG)
+// sizes:  written per call site to the width that slot actually paints.
+// ============================================================
+const RESP_SRC = new Set(["images/feat-1.l.jpg","images/feat-2.l.jpg"]);
+// slot -> the width that slot actually paints. Verified against the CSS:
+//   tilt   .tilted is a 2-col grid capped at 88rem  => tile ≈ (min(vw,1408)-84)/2
+//   card   .wgrid is 2-col under 1000px, 4-col above
+//   lightbox .pv is min(1200px,100%) with a 360px rail => art column ≈ 560px
+//   peek   .workPeek is a fixed 300px hover card
+const IMG_SIZES = {
+  tilt:     "(max-width:767px) 50vw, 48vw",
+  card:     "(max-width:767px) 46vw, (max-width:1000px) 48vw, 24vw",
+  lightbox: "(max-width:767px) calc(100vw - 112px), 560px",
+  peek:     "300px",
+  layer:    "(max-width:767px) 250px, 420px",
+};
+const RESP_TIERS = [640,1100,1800]; // <base>.640/1100/1800.webp + .jpg
+function respSets(src){
+  const base = src.replace(/\.l\.jpg$/, "");
+  return {
+    base,
+    webp: RESP_TIERS.map(w=>`${base}.${w}.webp ${w}w`).join(", "),
+    // the 1800 JPEG is the untouched original, not a <base>.1800.jpg
+    jpg:  [`${base}.640.jpg 640w`, `${base}.1100.jpg 1100w`, `${src} 1800w`].join(", "),
+    mid:  `${base}.1100.jpg`,
+    webpMid: `${base}.1100.webp`,
+  };
+}
+// Can this browser decode WebP? Probed once via canvas; guards the preloaders
+// so we never download a JPEG for something that will be painted as WebP.
+const WEBP_OK = (()=>{
+  try{ return document.createElement("canvas").toDataURL("image/webp").indexOf("data:image/webp") === 0; }
+  catch(e){ return false; }
+})();
+// Both preloaders exist for the lightbox, so resolve the tier that slot really
+// paints: 560px slot * DPR, snapped up to the next tier — mirroring the browser's
+// srcset rule. At DPR 1 that is the 640 tier (~110 KB); warming the 1100 tier
+// instead would download ~250 KB that the lightbox never displays.
+const LB_TIER = (()=>{
+  const need = 560 * (window.devicePixelRatio || 1);
+  return RESP_TIERS.find(w => w >= need) || RESP_TIERS[RESP_TIERS.length - 1];
+})();
+function posterURL(src){
+  if(!RESP_SRC.has(src)) return src;
+  const s = respSets(src);
+  return WEBP_OK ? `${s.base}.${LB_TIER}.webp` : s.mid;
+}
+function responsivePic(src, slot, fb, attrs){
+  const sizes = IMG_SIZES[slot] || slot;
+  if(!RESP_SRC.has(src)) return `<img src="${src}"${fb?` onerror="this.onerror=null;this.src='${fb}'"`:""} ${attrs}>`;
+  const s = respSets(src);
+  return `<picture>`
+    + `<source type="image/webp" srcset="${s.webp}" sizes="${sizes}">`
+    + `<img src="${s.mid}" srcset="${s.jpg}" sizes="${sizes}" width="1800" height="2400" onerror="this.onerror=null;this.src='${fb||src}'" ${attrs}>`
+    + `</picture>`;
+}
+// JS-driven <img> (lightbox + hover peek): same tiers, set imperatively.
+function setImg(el, src, fb, slot){
+  if(!el) return;
+  const sizes = IMG_SIZES[slot] || slot || "";
+  const pic = el.parentElement && el.parentElement.tagName === "PICTURE" ? el.parentElement : null;
+  const source = pic ? pic.querySelector("source") : null;
+  el.onerror = function(){ this.onerror = null; this.src = fb || src; };
+  if(!RESP_SRC.has(src)){
+    if(source){ source.removeAttribute("srcset"); source.removeAttribute("sizes"); }
+    el.removeAttribute("srcset"); el.removeAttribute("sizes");
+    el.removeAttribute("width"); el.removeAttribute("height");
+    el.src = src;
+    return;
+  }
+  const s = respSets(src);
+  // order matters: assigning srcset makes the browser resolve a candidate
+  // immediately using the sizes *currently* in effect. Setting sizes first
+  // (and src, the no-srcset fallback, before both) keeps that single
+  // resolution to one request instead of fetching two tiers.
+  if(source){ source.type = "image/webp"; source.sizes = sizes; source.srcset = s.webp; }
+  el.src = s.mid; el.sizes = sizes; el.width = 1800; el.height = 2400;
+  el.srcset = s.jpg;
+}
 const tilted = $("tiltedGrid");
 if(tilted){
-  tilted.innerHTML = FEATURED.map((f,i)=>`<figure data-tilt="${i}"><div class="tile"><img src="${f.src}" onerror="this.onerror=null;this.src='${f.fb||f.src}'" alt="${f.alt}" loading="${i<2?"eager":"lazy"}"></div><div class="cap"><span>${f.title}</span><span>${f.sub}</span></div></figure>`).join("");
+  // .tilted is a 2-col grid capped at 88rem => tile ≈ (min(vw,1408) - 84)/2
+  tilted.innerHTML = FEATURED.map((f,i)=>`<figure data-tilt="${i}"><div class="tile">${responsivePic(f.src,"tilt",f.fb,`alt="${f.alt}" loading="${i<2?"eager":"lazy"}"`)}</div><div class="cap"><span>${f.title}</span><span>${f.sub}</span></div></figure>`).join("");
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const tiles = [...tilted.querySelectorAll(".tile")];
   function tilt(){
@@ -280,7 +369,7 @@ const WORKS = [
       .sort((a,b)=>(parseInt(a.w.year,10)||0)-(parseInt(b.w.year,10)||0));
     if($("workCount")) $("workCount").textContent = String(list.length).padStart(2,"0") + " / " + String(WORKS.length).padStart(2,"0");
     wg.innerHTML = list.map(({w,i},pos)=>`
-    <button type="button" class="wcard" data-work="${i}" aria-label="${w.title} — view details"><span class="wcard-media"><img src="${w.img}"${w.w?` width="${w.w}" height="${w.h}"`:""} onerror="this.onerror=null;this.src='${w.fb||w.img}'" alt="${w.title}" loading="${pos<4?"eager":"lazy"}"><span class="wcard-hover"><span class="n">${String(pos+1).padStart(2,"0")} / ${String(list.length).padStart(2,"0")}</span><span class="t">${w.title}</span><span>${w.cat1} · ${w.cat2} · ${w.year}</span></span></span></button>`).join("");
+    <button type="button" class="wcard" data-work="${i}" aria-label="${w.title} — view details"><span class="wcard-media">${responsivePic(w.img,"card",w.fb,`alt="${w.title}" loading="${pos<4?"eager":"lazy"}"${w.w?` width="${w.w}" height="${w.h}"`:""}`)}<span class="wcard-hover"><span class="n">${String(pos+1).padStart(2,"0")} / ${String(list.length).padStart(2,"0")}</span><span class="t">${w.title}</span><span>${w.cat1} · ${w.cat2} · ${w.year}</span></span></span></button>`).join("");
     wl.innerHTML = list.map(({w,i},pos)=>`
     <button type="button" class="wrow" data-work="${i}"><span class="cats"><span>${w.cat1}</span><span>${w.cat2}</span></span><h3>${w.title}</h3><span class="yr">${w.year}</span><span class="n">${String(pos+1).padStart(2,"0")}</span></button>`).join("");
     if(typeof revealScan === "function") revealScan();
@@ -306,7 +395,7 @@ const WORKS = [
     const media = $("workMedia");
     function showVariant(v){
       const it = vs[v] || vs[0];
-      if(media){ media.onerror = function(){ this.onerror=null; this.src=it.fb||w.fb||it.img; }; media.src = it.img; media.alt = w.title + " — " + it.label; }
+      if(media){ setImg(media, it.img, it.fb||w.fb, "lightbox"); media.alt = w.title + " — " + it.label; }
       document.querySelectorAll("#workVariants button").forEach((x,xi)=>x.classList.toggle("on", xi === v));
     }
     if($("workVariants")) $("workVariants").innerHTML = vs.map((v,vi)=>`<button type="button" data-v="${vi}">${v.label}</button>`).join("");
@@ -342,7 +431,7 @@ const WORKS = [
     const vs = (w.variants && w.variants.length) ? w.variants : [{ label:"VERSION 01", img:w.img, fb:w.fb }];
     const it = vs[+b.dataset.v] || vs[0];
     const media = $("workMedia");
-    if(media){ media.onerror = function(){ this.onerror=null; this.src=it.fb||w.fb||it.img; }; media.src = it.img; }
+    if(media){ setImg(media, it.img, it.fb||w.fb, "lightbox"); media.alt = w.title + " — " + it.label; }
     document.querySelectorAll("#workVariants button").forEach(x=>x.classList.toggle("on", x === b));
   });
   // lightbox stepping — image crossfade; swaps content mid-fade, instant under reduced motion
@@ -357,7 +446,7 @@ const WORKS = [
     void box.offsetWidth;
     box.classList.add("stepping");
     // preload neighbors so the next image is likely decoded already
-    [WORKS[next+1],WORKS[next-1]].forEach(n=>{ if(n && n.img){ const im = new Image(); im.src = n.img; } });
+    [WORKS[next+1],WORKS[next-1]].forEach(n=>{ if(n && n.img){ const im = new Image(); im.src = posterURL(n.img); } });
     stepTimer = setTimeout(()=>{ openWork(next, true); box.classList.remove("stepping"); }, 200);
   }
   if($("workPrev")) $("workPrev").addEventListener("click", ()=>stepWork(-1));
@@ -420,8 +509,7 @@ const WORKS = [
         const w = WORKS[+row.dataset.work]; if(!w) return;
         if(img.dataset.k === row.dataset.work && peek.classList.contains("on")) return;
         img.dataset.k = row.dataset.work;
-        img.onerror = function(){ this.onerror=null; this.src=w.fb||w.img; };
-        img.src = w.img; peek.classList.add("on");
+        setImg(img, w.img, w.fb, "peek"); peek.classList.add("on");
       });
       wl.addEventListener("mouseleave", ()=>{ peek.classList.remove("on"); img.dataset.k = ""; });
     }
@@ -508,8 +596,10 @@ const WORKS = [
     })();
     updateIndexUI();
   })();
-  // warm the poster files so the popup opens without decode jank
-  const warm = ()=>WORKS.forEach(w=>{ const im = new Image(); im.src = w.img; });
+  // warm the poster files so the popup opens without decode jank. posterURL
+  // resolves the tier the lightbox will actually paint (560px slot x DPR) —
+  // the 640 tier at DPR 1, not the 1800 original: same decode, ~1/6 the bytes.
+  const warm = ()=>WORKS.forEach(w=>{ if(w.img){ const im = new Image(); im.src = posterURL(w.img); } });
   if("requestIdleCallback" in window) requestIdleCallback(warm); else setTimeout(warm, 1500);
 })();
 // nav dropdown — filters the grid on works.html, hands the filter over on other pages

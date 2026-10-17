@@ -27,6 +27,10 @@
   --ws:clamp(24px,3vw,48px);
 }
 *{box-sizing:border-box}
+/* <picture> wrappers exist only to negotiate <source> (WebP tiers); make them
+   transparent so the inner <img> keeps its grid/flex slot and the height:100% /
+   max-height:100% sizing in .tile, .pv-art and .cat-layer still resolve. */
+picture{display:contents}
 html{scroll-behavior:smooth;overflow-x:clip;scroll-padding-top:96px;color-scheme:dark}
 html.lenis,html.lenis body{height:auto}
 .lenis.lenis-smooth{scroll-behavior:auto!important}
