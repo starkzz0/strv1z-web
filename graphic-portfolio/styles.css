@@ -420,7 +420,7 @@ html.scroll-locked{overflow:hidden}
 .cols{display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px;align-items:end}
 
 /* ---------- footer ---------- */
-footer{border-top:1px solid var(--border);margin-top:clamp(64px,7vw,104px);padding:36px 28px 56px;display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;max-width:88rem;margin-left:auto;margin-right:auto;color:var(--muted);font-family:var(--mono);font-size:12px;letter-spacing:.08em}
+footer{border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-top:clamp(64px,7vw,104px);min-height:96px;padding:24px 28px;display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap;max-width:88rem;margin-left:auto;margin-right:auto;color:var(--muted);font-family:var(--mono);font-size:12px;letter-spacing:.08em}
 footer strong{color:var(--text);letter-spacing:.18em}
 footer a{text-decoration:none}
 footer a:hover{color:var(--text)}
@@ -542,7 +542,7 @@ html.js .rv-scale.in{opacity:1;transform:none}
   .formbox{padding:22px 18px}
   .lereve-nav{gap:16px;padding:8px 10px 8px 16px;top:10px}
   .sec,.sys,.hero,.gallery-hero,.feat-title,.feat-head,.feat-tri,.feat-sign,.tilted{padding-left:20px;padding-right:20px}
-  footer{padding-left:20px;padding-right:20px;flex-direction:column}
+  footer{padding-left:20px;padding-right:20px;flex-direction:column;align-items:stretch}
 }
 @media(hover:none){
   .cursor-label{display:none}
