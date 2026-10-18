@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tier Generator — STRV1Z</title>
+<style>
+  :root{--bg:#0D1014;--surface:#151A20;--border:#262E37;--text:#E6EBF0;--muted:#8F9BA8;--hl:#E6EBF0}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;font-size:15px;line-height:1.6;padding:40px 24px}
+  .wrap{max-width:820px;margin:0 auto}
+  h1{font-size:28px;margin:0 0 6px;font-weight:600}
+  .sub{color:var(--muted);margin:0 0 32px;font-size:14px}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:24px;margin:0 0 20px}
+  h2{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 14px;font-weight:500}
+  label{display:block;font-size:13px;color:var(--muted);margin:0 0 6px}
+  input[type=text],input[type=number]{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:10px 12px;border-radius:6px;font-size:14px;font-family:inherit}
+  input[type=file]{color:var(--muted);font-size:14px}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+  button{background:var(--hl);color:var(--bg);border:0;padding:12px 20px;border-radius:6px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit}
+  button:disabled{opacity:.4;cursor:not-allowed}
+  button.ghost{background:transparent;color:var(--text);border:1px solid var(--border)}
+  .preview{display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap}
+  .preview img{max-width:220px;max-height:280px;border:1px solid var(--border);border-radius:4px;background:var(--bg)}
+  .meta{color:var(--muted);font-size:13px}
+  .meta b{color:var(--text)}
+  .status{font-size:13px;margin:6px 0 0}
+  .ok{color:#6ecf8e}.err{color:#e07a7a}
+  table{width:100%;border-collapse:collapse;font-size:13px;margin:12px 0 0}
+  th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--border)}
+  th{color:var(--muted);font-weight:500;font-size:12px;letter-spacing:.06em;text-transform:uppercase}
+  td code{font-family:ui-monospace,monospace;font-size:12px}
+  .snippet{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:14px;font-family:ui-monospace,monospace;font-size:12px;white-space:pre;overflow:auto;position:relative}
+  .copy{position:absolute;top:8px;right:8px;background:var(--surface);border:1px solid var(--border);color:var(--text);padding:4px 10px;border-radius:4px;font-size:11px;cursor:pointer}
+  .steps{color:var(--muted);font-size:14px;padding-left:18px}
+  .steps li{margin:6px 0}
+  .steps code{color:var(--text);font-family:ui-monospace,monospace;font-size:12px}
+  .note{color:var(--muted);font-size:12px;margin-top:10px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Tier Generator</h1>
+  <p class="sub">Generate the 640 / 1100 / 1800px WebP + JPEG tiers for a new poster. Runs entirely in your browser — no Node, no uploads.</p>
+
+  <div class="card">
+    <h2>1. Pick the original</h2>
+    <input type="file" id="file" accept="image/*">
+    <div class="preview" id="preview" style="margin-top:16px;display:none">
+      <img id="previewImg" alt="">
+      <div class="meta">
+        <div><b id="dims">—</b></div>
+        <div id="aspect">—</div>
+        <div id="size">—</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>2. Settings</h2>
+    <div class="row">
+      <div>
+        <label>Base name (becomes &lt;base&gt;.640.webp, …)</label>
+        <input type="text" id="base" placeholder="e.g. midnight">
+      </div>
+      <div>
+        <label>WebP quality (0–1)</label>
+        <input type="number" id="qwebp" value="0.82" step="0.01" min="0.5" max="1">
+      </div>
+    </div>
+    <div class="row" style="margin-top:14px">
+      <div>
+        <label>JPEG quality (0–1)</label>
+        <input type="number" id="qjpeg" value="0.85" step="0.01" min="0.5" max="1">
+      </div>
+      <div>
+        <label>&nbsp;</label>
+        <p class="note" style="margin:0">Tiers are fixed at 640 / 1100 / 1800 px. Your original should be at least 1800 px wide.</p>
+      </div>
+    </div>
+    <p class="note">The 1800 JPEG tier is your original saved as <code>&lt;base&gt;.l.jpg</code> — this tool only generates the 5 derived files.</p>
+  </div>
+
+  <div class="card">
+    <h2>3. Generate</h2>
+    <button id="gen" disabled>Generate &amp; download tiers</button>
+    <div id="status" class="status"></div>
+    <table id="results" style="display:none">
+      <thead><tr><th>File</th><th>Dimensions</th><th>Size</th><th>Status</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>4. Wire it up</h2>
+    <p class="meta" style="margin:0 0 10px">After dropping the files into <code>graphic-portfolio/images/</code>, add the base to <code>RESP_SRC</code> and a WORKS entry. Snippets for <span id="baseEcho">your base</span>:</p>
+    <div class="snippet" id="snip1"><button class="copy" data-target="snip1">copy</button></div>
+    <div style="height:10px"></div>
+    <div class="snippet" id="snip2"><button class="copy" data-target="snip2">copy</button></div>
+  </div>
+
+  <div class="card">
+    <h2>5. Commit to git</h2>
+    <ol class="steps">
+      <li>Save your original as <code>graphic-portfolio/images/&lt;base&gt;.l.jpg</code>.</li>
+      <li>Move the 5 downloaded files into <code>graphic-portfolio/images/</code>.</li>
+      <li>Paste the snippets above into <code>script.js</code>.</li>
+      <li>Run:<br><code>git -C C:\Users\Dev\Documents add graphic-portfolio/images graphic-portfolio/script.js</code><br><code>git -C C:\Users\Dev\Documents commit -m "Add &lt;base&gt; work with responsive WebP tiers"</code><br><code>git -C C:\Users\Dev\Documents push origin main</code></li>
+    </ol>
+  </div>
+</div>
+
+<script>
+const file = document.getElementById('file');
+const preview = document.getElementById('preview');
+const previewImg = document.getElementById('previewImg');
+const dims = document.getElementById('dims');
+const aspect = document.getElementById('aspect');
+const sizeEl = document.getElementById('size');
+const base = document.getElementById('base');
+const gen = document.getElementById('gen');
+const status = document.getElementById('status');
+const results = document.getElementById('results');
+const tbody = results.querySelector('tbody');
+const baseEcho = document.getElementById('baseEcho');
+const snip1 = document.getElementById('snip1');
+const snip2 = document.getElementById('snip2');
+
+let img = null;
+let fileName = '';
+
+file.addEventListener('change', e => {
+  const f = e.target.files && e.target.files[0];
+  if (!f) return;
+  fileName = f.name.replace(/\.[^.]+$/, '');
+  if (!base.value.trim()) base.value = fileName;
+  const url = URL.createObjectURL(f);
+  const i = new Image();
+  i.onload = () => {
+    img = i;
+    previewImg.src = url;
+    preview.style.display = 'flex';
+    dims.textContent = i.naturalWidth + ' × ' + i.naturalHeight + ' px';
+    const g = gcd(i.naturalWidth, i.naturalHeight);
+    aspect.textContent = 'aspect ' + (i.naturalWidth/g) + ':' + (i.naturalHeight/g);
+    sizeEl.textContent = (f.size/1024).toFixed(0) + ' KB original';
+    gen.disabled = false;
+    updateSnippets();
+  };
+  i.src = url;
+});
+
+function gcd(a,b){ while(b){ [a,b]=[b,a%b]; } return a; }
+
+base.addEventListener('input', updateSnippets);
+
+function updateSnippets(){
+  const b = (base.value.trim() || 'my-poster');
+  baseEcho.textContent = b;
+  snip1.innerHTML = '<button class="copy" data-target="snip1">copy</button>' +
+    'const RESP_SRC = new Set([\n  "images/feat-1.l.jpg",\n  "images/feat-2.l.jpg",\n  "images/' + b + '.l.jpg",\n]);';
+  snip2.innerHTML = '<button class="copy" data-target="snip2">copy</button>' +
+    '{ title:"' + cap(b) + '", client:"Personal project", cat1:"Poster", cat2:"Design", format:"posters", year:"2026",\n' +
+    '  dims:"' + (img ? img.naturalWidth*2 + ' × ' + img.naturalHeight*2 + ' PX' : '3600 × 4500 PX') + '",\n' +
+    '  img:"images/' + b + '.l.jpg", fb:"", desc:"Add your description here.",\n' +
+    '  process:["Concept","Design","Final export"],\n' +
+    '  variants:[{ label:"VERSION 01", img:"images/' + b + '.l.jpg" }] },';
+  // re-bind copy buttons
+  snip1.querySelector('.copy').onclick = () => copy('snip1');
+  snip2.querySelector('.copy').onclick = () => copy('snip2');
+}
+
+function cap(s){ return s.replace(/[-_]/g,' ').replace(/\b\w/g,c=>c.toUpperCase()); }
+
+function copy(id){
+  const el = document.getElementById(id);
+  const text = el.textContent.replace('copy','').trim();
+  navigator.clipboard.writeText(text).then(()=>{ const btn=el.querySelector('.copy'); btn.textContent='copied'; setTimeout(()=>btn.textContent='copy',1200); });
+}
+
+document.querySelectorAll('.copy').forEach(btn=>btn.addEventListener('click',()=>copy(btn.dataset.target)));
+
+gen.addEventListener('click', async () => {
+  if (!img) return;
+  gen.disabled = true;
+  status.textContent = 'Generating…';
+  tbody.innerHTML = '';
+  results.style.display = 'table';
+  const b = base.value.trim() || 'poster';
+  const qW = parseFloat(document.getElementById('qwebp').value) || 0.82;
+  const qJ = parseFloat(document.getElementById('qjpeg').value) || 0.85;
+  const origW = img.naturalWidth, origH = img.naturalHeight;
+  const tiers = [640, 1100, 1800].filter(w => w <= origW || w === 640);
+  if (origW < 1800) {
+    status.textContent = 'Warning: original is ' + origW + 'px wide — smaller than the 1800 tier, upscaling will occur.';
+    status.className = 'status err';
+  } else {
+    status.textContent = 'Generating…';
+    status.className = 'status';
+  }
+
+  const make = (width, mime, quality) => new Promise(resolve => {
+    const h = Math.round(origH * width / origW);
+    const c = document.createElement('canvas');
+    c.width = width; c.height = h;
+    const ctx = c.getContext('2d');
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
+    ctx.drawImage(img, 0, 0, width, h);
+    c.toBlob(blob => resolve({ blob, w: width, h }), mime, quality);
+  });
+
+  // WebP: all three tiers. JPEG: 640 + 1100 only (1800 JPEG is the original .l.jpg)
+  const jobs = [];
+  for (const w of tiers) jobs.push({ name: b + '.' + w + '.webp', mime: 'image/webp', q: qW, w });
+  for (const w of [640, 1100]) jobs.push({ name: b + '.' + w + '.jpg', mime: 'image/jpeg', q: qJ, w });
+  const seen = new Set();
+  const uniq = jobs.filter(j => { if (seen.has(j.name)) return false; seen.add(j.name); return true; });
+
+  for (const job of uniq) {
+    const { blob, w, h } = await make(job.w, job.mime, job.q);
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = job.name;
+    document.body.appendChild(a); a.click(); a.remove();
+    URL.revokeObjectURL(url);
+    const tr = document.createElement('tr');
+    tr.innerHTML = '<td><code>' + job.name + '</code></td><td>' + w + ' × ' + h + '</td><td>' + (blob.size/1024).toFixed(0) + ' KB</td><td class="ok">downloaded</td>';
+    tbody.appendChild(tr);
+    await new Promise(r => setTimeout(r, 120));
+  }
+  status.textContent = 'Done — ' + uniq.length + ' files downloaded. Save your original as ' + b + '.l.jpg';
+  status.className = 'status ok';
+  gen.disabled = false;
+});
+</script>
+</body>
+</html>
