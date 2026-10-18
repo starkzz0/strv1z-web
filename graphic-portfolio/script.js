@@ -136,6 +136,10 @@ tick(); setInterval(tick, 15000);
 // buttery smooth scrolling (Lenis) across the whole site
 (function initSmooth(){
   if(matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  // Lenis misbehaves in Firefox-based browsers (janky wheel/trackpad
+  // scrolling, scrollbar flicker) — fall back to native smooth scrolling
+  // (scroll-behavior: smooth in CSS) there instead.
+  if(/Firefox/i.test(navigator.userAgent)) return;
   if(!window.Lenis) return;
   const lenis = new window.Lenis({ lerp:0.09, wheelMultiplier:1, anchors:true, autoRaf:true });
   window.__lenis = lenis;
